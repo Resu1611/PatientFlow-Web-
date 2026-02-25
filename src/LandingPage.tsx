@@ -122,7 +122,7 @@ export default function LandingPage() {
           NAVBAR FLOTANTE
       ════════════════════════════════════════════════ */}
       <nav className="fixed top-4 left-4 right-4 z-50 max-w-6xl mx-auto">
-        <div className="glass-card rounded-2xl px-5 py-3 flex items-center justify-between">
+        <div className="bg-[#0D2318]/60 backdrop-blur-md border border-[#CEF88D]/15 rounded-2xl px-5 py-3 flex items-center justify-between">
           <span className="text-white text-xl font-bold tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
             Patient<span className="italic font-normal text-[#CEF88D]">Flow.</span>
           </span>
