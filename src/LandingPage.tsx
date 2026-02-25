@@ -17,11 +17,11 @@ const PAIN_POINTS = [
 ];
 
 const INSIDE_ITEMS = [
-  'El framework exacto para filtrar curiosos y atraer pacientes High-Ticket.',
-  'Scripts de WhatsApp probados para rebatir la objeción de "está muy caro".',
-  'El sistema de 3 pasos para reducir los no-shows a menos del 10%.',
-  'Cómo estructurar una oferta irresistible sin abaratar tu marca.',
-  'Las 3 métricas (KPIs) que debes revisar cada viernes para asegurar rentabilidad.',
+  'The Authority Lead Magnet: El framework exacto para atraer prospectos seriamente interesados y alejar a los que solo buscan cosas gratis.',
+  'The Pre-Frame Video Page: La estrategia de 3 minutos para educar a tu cliente, resolver sus miedos y posicionarte como la única opción lógica.',
+  'Fast-Track Form: Las preguntas clave que debes hacer para filtrar curiosos y garantizar que tu equipo solo hable con pacientes listos para invertir.',
+  'The Priority Booking Page: Cómo automatizar tu agenda para reducir las inasistencias (no-shows) a menos del 15%.',
+  'Secuencia de Seguimiento: La estructura exacta de emails de confirmación y recordatorios que aseguran la asistencia y preparan la venta.',
 ];
 
 const FOR_WHO_YES = [
