@@ -93,9 +93,79 @@ export default function LandingPage() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    countryCode: '+52',
+    phone: '',
+    consent: false
+  });
+
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    general: ''
+  });
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === '' || /^[a-zA-ZÀ-ÿ\s]*$/.test(val)) {
+      setFormData({ ...formData, name: val });
+      if (errors.name) setErrors({ ...errors, name: '' });
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === '' || /^\d*$/.test(val)) {
+      setFormData({ ...formData, phone: val });
+      if (errors.phone) setErrors({ ...errors, phone: '' });
+    }
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { name: '', email: '', phone: '', general: '' };
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'El nombre es requerido';
+      valid = false;
+    } else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(formData.name)) {
+      newErrors.name = 'Solo se permiten letras';
+      valid = false;
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'El email es requerido';
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Ingresa un email válido';
+      valid = false;
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'El teléfono es requerido';
+      valid = false;
+    } else if (!/^\d+$/.test(formData.phone)) {
+      newErrors.phone = 'Solo se permiten números';
+      valid = false;
+    }
+
+    if (!formData.consent) {
+      newErrors.general = 'Debes aceptar los términos';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (validateForm()) {
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -474,16 +544,19 @@ export default function LandingPage() {
                 <p className="text-text-dark/70 text-sm">Revisa tu correo. El PDF está en camino.</p>
               </div>
             ) : (
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="space-y-4" onSubmit={handleSubmit} noValidate>
                 <div>
                   <label htmlFor="name" className="block text-xs font-semibold text-text-dark/70 uppercase tracking-wide mb-2">
                     Nombre completo *
                   </label>
                   <input
                     type="text" id="name" required
-                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-main/40 focus:border-primary-main transition-all duration-200 text-sm"
+                    value={formData.name}
+                    onChange={handleNameChange}
+                    className={`w-full bg-white border ${errors.name ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-main/40 focus:border-primary-main transition-all duration-200 text-sm`}
                     placeholder="Ej. Dra. Laura Gómez"
                   />
+                  {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name}</p>}
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-xs font-semibold text-text-dark/70 uppercase tracking-wide mb-2">
@@ -491,29 +564,63 @@ export default function LandingPage() {
                   </label>
                   <input
                     type="email" id="email" required
-                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-main/40 focus:border-primary-main transition-all duration-200 text-sm"
+                    value={formData.email}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (errors.email) setErrors({ ...errors, email: '' });
+                    }}
+                    className={`w-full bg-white border ${errors.email ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-main/40 focus:border-primary-main transition-all duration-200 text-sm`}
                     placeholder="tu@clinica.com"
                   />
+                  {errors.email && <p className="text-red-500 text-xs mt-1.5">{errors.email}</p>}
                 </div>
                 <div>
                   <label htmlFor="whatsapp" className="block text-xs font-semibold text-text-dark/70 uppercase tracking-wide mb-2">
                     WhatsApp *
                   </label>
-                  <input
-                    type="tel" id="whatsapp" required
-                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-main/40 focus:border-primary-main transition-all duration-200 text-sm"
-                    placeholder="+52 123 456 7890"
-                  />
+                  <div className="flex gap-2">
+                    <select
+                      value={formData.countryCode}
+                      onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
+                      className="bg-white border border-gray-200 rounded-xl px-2 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-main/40 focus:border-primary-main transition-all duration-200 text-sm w-[110px] shrink-0"
+                    >
+                      <option value="+52">+52 MX</option>
+                      <option value="+57">+57 CO</option>
+                      <option value="+51">+51 PE</option>
+                      <option value="+54">+54 AR</option>
+                      <option value="+56">+56 CL</option>
+                      <option value="+34">+34 ES</option>
+                      <option value="+1">+1 US/CA</option>
+                    </select>
+                    <div className="flex-grow">
+                      <input
+                        type="tel" id="whatsapp" required
+                        value={formData.phone}
+                        onChange={handlePhoneChange}
+                        className={`w-full bg-white border ${errors.phone ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-main/40 focus:border-primary-main transition-all duration-200 text-sm`}
+                        placeholder="123 456 7890"
+                      />
+                    </div>
+                  </div>
+                  {errors.phone && <p className="text-red-500 text-xs mt-1.5">{errors.phone}</p>}
                 </div>
 
-                <div className="flex items-start gap-3 pt-1">
-                  <input
-                    type="checkbox" id="consent" required
-                    className="mt-1 w-4 h-4 accent-[#1A4029] rounded border-gray-300 cursor-pointer"
-                  />
-                  <label htmlFor="consent" className="text-xs text-text-dark/60 leading-tight cursor-pointer">
-                    Acepto recibir el booklet y comunicaciones sobre marketing para MedSpas. *
-                  </label>
+                <div className="pt-1">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox" id="consent" required
+                      checked={formData.consent}
+                      onChange={(e) => {
+                        setFormData({ ...formData, consent: e.target.checked });
+                        if (errors.general) setErrors({ ...errors, general: '' });
+                      }}
+                      className={`mt-1 w-4 h-4 accent-[#1A4029] rounded cursor-pointer ${errors.general ? 'border-red-500' : 'border-gray-300'}`}
+                    />
+                    <label htmlFor="consent" className="text-xs text-text-dark/60 leading-tight cursor-pointer">
+                      Acepto recibir el booklet y comunicaciones sobre marketing para MedSpas. *
+                    </label>
+                  </div>
+                  {errors.general && <p className="text-red-500 text-xs mt-1.5 ml-7">{errors.general}</p>}
                 </div>
 
                 <button
