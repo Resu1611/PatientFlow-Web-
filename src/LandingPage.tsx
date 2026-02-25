@@ -166,7 +166,7 @@ export default function LandingPage() {
           <div className="flex flex-wrap justify-center gap-4 mb-10">
             {[
               { icon: Users, value: '+200', label: 'Clínicas usando el sistema' },
-              { icon: TrendingUp, value: '85%', label: 'Reducción promedio de no-shows' },
+              { icon: TrendingUp, value: '15%', label: 'Reducción promedio de no-shows' },
               { icon: Zap, value: '100%', label: 'Gratis, sin tarjeta' },
             ].map(({ icon: Icon, value, label }) => (
               <div key={label} className="glass-card rounded-2xl px-5 py-4 flex items-center gap-3 min-w-[180px]">
@@ -285,7 +285,7 @@ export default function LandingPage() {
                   Qué vas a encontrar dentro del PatientFlow Booklet
                 </h2>
                 <p className="text-text-dark/60 text-base mb-8 leading-relaxed">
-                  Un manual táctico, sin relleno, diseñado para implementarse en 48 horas.
+                  Un manual estratégico diseñado para que dejes de perseguir leads y empieces a llenar tu agenda con pacientes pre-vendidos.
                 </p>
 
                 <ul className="space-y-5">
