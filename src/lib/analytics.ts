@@ -1,0 +1,47 @@
+/**
+ * Placeholder de tracking.
+ *
+ * ⚠️ RENZO: aquí conectas tu pixel. Hoy solo hace `console.debug` en
+ * desarrollo y no envía nada a ningún lado.
+ *
+ * Para conectar Meta Pixel / GA4 / GHL, reemplaza el cuerpo de `trackEvent`:
+ *
+ *   // Meta Pixel
+ *   window.fbq?.('trackCustom', name, payload);
+ *
+ *   // GA4
+ *   window.gtag?.('event', name, payload);
+ *
+ * El snippet del pixel va en `index.html`, dentro del `<head>`.
+ */
+
+export type TrackableEvent =
+  | 'cta_hero_click'
+  | 'calculadora_usada'
+  | 'cta_final_click'
+  | 'calendario_embed_cargado';
+
+export function trackEvent(
+  name: TrackableEvent,
+  payload: Record<string, unknown> = {},
+): void {
+  if (import.meta.env.DEV) {
+    console.debug('[trackEvent]', name, payload);
+  }
+  // Conecta aquí tu pixel/analytics.
+}
+
+/**
+ * Devuelve una función que solo dispara `trackEvent` la primera vez.
+ * La calculadora la usa para no emitir un evento por cada píxel del slider.
+ */
+export function once(
+  name: TrackableEvent,
+): (payload?: Record<string, unknown>) => void {
+  let fired = false;
+  return (payload = {}) => {
+    if (fired) return;
+    fired = true;
+    trackEvent(name, payload);
+  };
+}

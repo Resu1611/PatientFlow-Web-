@@ -1,0 +1,9 @@
+{
+  "projectId": "1864bdcb-2767-4582-850a-eea8973e1131",
+  "pkg": "react-example",
+  "globalName": "PatientFlowUI",
+  "shape": "package",
+  "buildCmd": "npm run build:lib",
+  "cssEntry": "dist-lib/react-example.css",
+  "readmeHeader": ".design-sync/conventions.md"
+}

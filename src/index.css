@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -26,6 +26,10 @@
   --color-gold: #D4AF37;
   --color-gold-light: #E8CB5A;
 
+  /* ── Alert (solo cifras de pérdida) ── */
+  --color-alert-main: #F87171;
+  --color-alert-strong: #EF4444;
+
   /* ── Borders ── */
   --color-border-subtle: rgba(206,248,141,0.10);
   --color-border-gold: rgba(212,175,55,0.25);
@@ -36,6 +40,12 @@
 }
 
 /* ── Base ── */
+html {
+  scroll-behavior: smooth;
+  /* Deja aire bajo el header fijo al saltar a #agendar. */
+  scroll-padding-top: 84px;
+}
+
 body {
   background-color: theme('colors.bg-main');
   color: theme('colors.text-main');
@@ -48,7 +58,7 @@ h1, h2, h3, h4 {
   font-family: theme('fontFamily.heading');
 }
 
-/* ── Background Grid (più fine e discreta) ── */
+/* ── Background Grid ── */
 .bg-grid {
   background-size: 48px 48px;
   background-image:
@@ -87,6 +97,13 @@ h1, h2, h3, h4 {
   background-clip: text;
 }
 
+.gradient-text-alert {
+  background: linear-gradient(135deg, #FCA5A5 0%, #EF4444 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* ── Glow effects ── */
 .glow-lime {
   box-shadow: 0 0 24px rgba(206,248,141,0.20), 0 0 48px rgba(206,248,141,0.08);
@@ -114,6 +131,81 @@ h1, h2, h3, h4 {
 
 .btn-primary:active {
   transform: translateY(0);
+  background-color: theme('colors.accent-hover');
+}
+
+/* ── Slider de la calculadora ── */
+.pf-slider {
+  --pf-slider-fill: 50%;
+  width: 100%;
+  height: 28px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+  display: block;
+}
+
+/* El track se pinta con un gradiente duro en --pf-slider-fill: lima a la
+   izquierda del thumb, verde apagado a la derecha. */
+.pf-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    #CEF88D 0%,
+    #CEF88D var(--pf-slider-fill),
+    rgba(206,248,141,0.15) var(--pf-slider-fill),
+    rgba(206,248,141,0.15) 100%
+  );
+}
+
+.pf-slider::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    #CEF88D 0%,
+    #CEF88D var(--pf-slider-fill),
+    rgba(206,248,141,0.15) var(--pf-slider-fill),
+    rgba(206,248,141,0.15) 100%
+  );
+}
+
+.pf-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -10px;
+  border-radius: 999px;
+  background: #CEF88D;
+  border: 3px solid #0D2318;
+  box-shadow: 0 2px 10px rgba(206,248,141,0.45);
+  transition: transform 150ms ease;
+}
+
+.pf-slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #CEF88D;
+  border: 3px solid #0D2318;
+  box-shadow: 0 2px 10px rgba(206,248,141,0.45);
+  transition: transform 150ms ease;
+}
+
+.pf-slider:active::-webkit-slider-thumb { transform: scale(1.12); }
+.pf-slider:active::-moz-range-thumb { transform: scale(1.12); }
+
+.pf-slider:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid #CEF88D;
+  outline-offset: 2px;
+}
+
+.pf-slider:focus-visible::-moz-range-thumb {
+  outline: 2px solid #CEF88D;
+  outline-offset: 2px;
 }
 
 /* ── Soft animations ── */
@@ -127,11 +219,6 @@ h1, h2, h3, h4 {
   50% { opacity: 0.6; }
 }
 
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
 .animate-float-slow {
   animation: float-slow 6s ease-in-out infinite;
 }
@@ -140,36 +227,18 @@ h1, h2, h3, h4 {
   animation: pulse-glow 4s ease-in-out infinite;
 }
 
-.animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
-}
-
-/* ── Form inputs ── */
-.form-input {
-  width: 100%;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(206,248,141,0.15);
-  border-radius: 12px;
-  padding: 14px 16px;
-  color: theme('colors.text-main');
-  font-family: theme('fontFamily.sans');
-  font-size: 15px;
-  transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
-  outline: none;
-}
-
-.form-input::placeholder {
-  color: theme('colors.text-subtle');
-}
-
-.form-input:focus {
-  border-color: theme('colors.accent-main');
-  background: rgba(206,248,141,0.05);
-  box-shadow: 0 0 0 3px rgba(206,248,141,0.12);
-}
-
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: theme('colors.bg-alt'); }
 ::-webkit-scrollbar-thumb { background: theme('colors.primary-main'); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: theme('colors.accent-main'); }
+
+/* ── Accesibilidad: respeta la preferencia del sistema ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

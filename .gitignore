@@ -1,8 +1,16 @@
 node_modules/
 build/
 dist/
+dist-lib/
 coverage/
 .DS_Store
 *.log
 .env*
 !.env.example
+
+# design-sync
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
