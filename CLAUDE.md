@@ -37,6 +37,12 @@ El tráfico llega principalmente desde **outreach directo por WhatsApp en celula
 - Deja una función `trackEvent` como placeholder en: clic CTA hero, uso de la calculadora, clic CTA final, carga del embed de calendario.
 - **Verifica que el hosting permita controlar el `<head>` (meta tags) e insertar el iframe.** Si el export de AI Studio no lo permite, avísalo explícitamente y recomienda migrar a Vercel/Netlify antes de continuar.
 
+## Desarrollo local
+
+**Mantener el dev server corriendo durante toda la sesión de trabajo.** Ejecuta `npm run dev` una sola vez al inicio; el servidor con Vite HMR refleja cada cambio en tiempo real sin necesidad de reiniciar. Una vez iniciado, déjalo funcionando — facilita la verificación visual inmediata de cambios y es mucho más rápido que compilar entre cada paso.
+
+La landing está siempre en **http://localhost:3000**.
+
 ## Cómo entregar
 
 Al terminar cualquier tarea, lista los archivos creados/modificados y di exactamente dónde Renzo debe pegar: (1) su URL del calendario GHL, (2) la captura del dashboard, (3) su pixel/tracking. No des por terminada la landing sin esos tres puntos señalados.
