@@ -29,8 +29,11 @@ export { default as DecorativeBackground } from './components/layout/DecorativeB
 
 // Secciones
 export { default as Hero } from './components/sections/Hero';
+export { default as Leaks } from './components/sections/Leaks';
 export { default as LossCalculator, calcularPerdida } from './components/sections/LossCalculator';
+export { default as Benchmarks } from './components/sections/Benchmarks';
 export { default as HowItWorks } from './components/sections/HowItWorks';
+export { default as SystemPieces } from './components/sections/SystemPieces';
 export { default as VerifiableProof } from './components/sections/VerifiableProof';
 export { default as Guarantee } from './components/sections/Guarantee';
 export { default as Qualification } from './components/sections/Qualification';

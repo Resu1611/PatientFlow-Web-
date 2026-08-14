@@ -67,6 +67,36 @@ element instead:
   (numbering was already justified — real 3-step process — the rail makes
   that sequence relationship explicit instead of implicit).
 
+## Expansión de contenido 2026-08-14 (booklet) — 3 secciones nuevas
+
+El booklet de ventas se usó como fuente para cerrar huecos de contenido
+reales (capacidades del servicio que la landing nunca mencionaba). Tres
+componentes de sección nuevos, exportados del barrel — la próxima corrida
+de `/design-sync` los sube como componentes 25–27:
+
+- `Leaks` (`sections/Leaks.tsx`) — las 4 fugas nombradas, grid 2×2.
+  Badges en rojo genérico de Tailwind (mismo criterio que la columna
+  "No es para ti" de `Qualification`), NUNCA `--color-alert-main` ni
+  `.gradient-text-alert` (exclusivos de cifras de pérdida). Reutiliza
+  `FUENTE_CIFRAS` como nota de fuente (el "40%" viaja con su cita).
+- `Benchmarks` (`sections/Benchmarks.tsx`) — sin sistema vs con sistema,
+  4 métricas con badges enfrentados. Valores en `font-mono` (cifras con
+  fuente citada, mismo criterio que la calculadora). Fuente propia en
+  `BENCHMARKS_SECCION.fuente`.
+- `SystemPieces` (`sections/SystemPieces.tsx`) — las 4 piezas del producto
+  con etiqueta "Tapa la X" (callback temático a `Leaks`) + nota corta del
+  reporte mensual. Íconos con eco deliberado: `Zap` repite el paso 02 de
+  `HowItWorks`; `PhoneIncoming`/`CalendarClock` contrastan con
+  `PhoneMissed`/`CalendarX2` de `Leaks`.
+
+Orden de página nuevo: Hero → **Leaks** → LossCalculator → **Benchmarks**
+→ HowItWorks → **SystemPieces** → VerifiableProof → … (resto igual).
+`REDISEÑO.md` documenta el orden original de 9 secciones y quedó
+desactualizado — es referencia histórica, no afecta nada.
+
+Verificado: 0 fallos de contraste (28 estilos), sin scroll horizontal en
+390/820/1440, valores de benchmarks sin wrap a 390px, lint+build limpios.
+
 ## Pasada de UI/UX 2026-08-13 (skill ui-ux-pro-max) — solo defectos, sin rediseño
 
 Revisión contra el checklist del skill. No se tocó ni la paleta ni el layout:

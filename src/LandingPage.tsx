@@ -3,8 +3,11 @@ import DecorativeBackground from './components/layout/DecorativeBackground';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import Hero from './components/sections/Hero';
+import Leaks from './components/sections/Leaks';
 import LossCalculator from './components/sections/LossCalculator';
+import Benchmarks from './components/sections/Benchmarks';
 import HowItWorks from './components/sections/HowItWorks';
+import SystemPieces from './components/sections/SystemPieces';
 import VerifiableProof from './components/sections/VerifiableProof';
 import Guarantee from './components/sections/Guarantee';
 import Qualification from './components/sections/Qualification';
@@ -30,8 +33,11 @@ export default function LandingPage() {
 
       <main className="max-w-6xl mx-auto px-5 lg:px-8 relative z-10 pt-24">
         <Hero />
+        <Leaks />
         <LossCalculator />
+        <Benchmarks />
         <HowItWorks />
+        <SystemPieces />
         <VerifiableProof />
         <Guarantee />
         <Qualification />

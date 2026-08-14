@@ -1,0 +1,59 @@
+import React from 'react';
+import { MoonStar, PhoneMissed, Unlink2, CalendarX2 } from 'lucide-react';
+import { FUGAS, FUGAS_SECCION, FUENTE_CIFRAS } from '../../data/landing';
+
+const ICONOS = [MoonStar, PhoneMissed, Unlink2, CalendarX2];
+
+/**
+ * Las 4 fugas del booklet, nombradas. Da vocabulario al problema antes de que
+ * la calculadora (justo debajo) lo cuantifique. Grid 2×2 a propósito —
+ * distinto del riel secuencial de HowItWorks, porque aquí el orden NO es
+ * información: son cuatro fugas paralelas, no una secuencia.
+ *
+ * Los badges usan el rojo genérico de Tailwind (mismo criterio que la columna
+ * "No es para ti" de Qualification) — NUNCA el token --color-alert-main ni
+ * .gradient-text-alert, que son exclusivos de cifras de pérdida (regla 2).
+ */
+export default function Leaks() {
+  return (
+    <section className="py-12 lg:py-20">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-main text-center mb-12 leading-tight">
+        {FUGAS_SECCION.titulo}
+      </h2>
+
+      <div className="grid gap-5 md:grid-cols-2 max-w-4xl mx-auto">
+        {FUGAS.map((fuga, i) => {
+          const Icono = ICONOS[i] ?? MoonStar;
+          return (
+            <div key={fuga.numero} className="glass-card rounded-2xl p-6 sm:p-7">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-11 h-11 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
+                  <Icono className="w-5 h-5 text-red-400" aria-hidden="true" />
+                </span>
+                <span
+                  className="font-mono text-xs tracking-widest text-text-subtle"
+                  aria-hidden="true"
+                >
+                  {fuga.numero}
+                </span>
+              </div>
+              <h3 className="text-text-main font-bold text-base sm:text-lg mb-2">
+                {fuga.nombre}
+              </h3>
+              <p className="text-text-muted text-sm leading-relaxed">{fuga.texto}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-10 text-text-main text-center max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+        {FUGAS_SECCION.cierre}
+      </p>
+      {/* Regla 2 de CLAUDE.md: el "40%" de la fuga nocturna viene de la misma
+          investigación citada en el hero — la nota viaja con la cifra. */}
+      <p className="mt-4 text-xs text-text-subtle text-center max-w-xl mx-auto leading-relaxed">
+        {FUENTE_CIFRAS}
+      </p>
+    </section>
+  );
+}
