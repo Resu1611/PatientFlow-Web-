@@ -21,7 +21,9 @@ import BookingSection from './components/sections/BookingSection';
  */
 export default function LandingPage() {
   return (
-    <div className="min-h-screen relative overflow-hidden selection:bg-accent-main selection:text-bg-main">
+    // min-h-dvh y no min-h-screen: en móvil 100vh cuenta la barra del
+    // navegador como si no existiera y deja un hueco al final.
+    <div className="min-h-dvh relative overflow-hidden selection:bg-accent-main selection:text-bg-main">
       <DecorativeBackground />
 
       <Header />

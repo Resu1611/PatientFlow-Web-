@@ -15,11 +15,14 @@ export default function Footer() {
         Patient<span className="italic font-normal text-accent-main">Flow.</span>
       </span>
 
-      <p className="mt-5 max-w-xl mx-auto text-xs text-text-muted/60 leading-relaxed px-5">
+      {/* Sin modificador de opacidad: la nota de la Ley 29733 es justamente el
+          texto que tiene que poder leerse. Con /60 y /40 quedaba en 3.2:1 y
+          2.1:1 — por debajo del mínimo AA. */}
+      <p className="mt-5 max-w-xl mx-auto text-xs text-text-subtle leading-relaxed px-5">
         {LEGAL}
       </p>
 
-      <p className="mt-4 text-xs text-text-muted/40">
+      <p className="mt-4 text-xs text-text-subtle">
         © {new Date().getFullYear()} Patient Flow Scale
       </p>
     </footer>

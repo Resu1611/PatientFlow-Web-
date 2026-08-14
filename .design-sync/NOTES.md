@@ -41,6 +41,58 @@ La landing pasó del funnel de booklet (descarga de PDF) al modelo de
 - `framer-motion` ya **no se usa** (peso; objetivo <2s en 4G). El acordeón
   usa CSS puro. No reintroducirlo.
 
+## Restyle pass 2026-08-11 (frontend-design skill) — new component + font role
+
+Applied `.claude/skills/frontend-design/SKILL.md` (installed this session
+from anthropics/claude-code) to the redesign. Palette stayed exactly as-is
+— CLAUDE.md mandates brand continuity, that's not a free axis — so the
+distinctiveness pass went into typography, layout, and one signature
+element instead:
+
+- **New component**: `WhatsAppMockup` (`src/components/ui/WhatsAppMockup.tsx`)
+  — the hero's signature element, a before/after chat comparison (no
+  system vs. PatientFlow) built entirely from markup, zero image assets.
+  Self-animating (ticking "sin responder" clock, typing→reply loop),
+  gated on `prefers-reduced-motion`. Exported from the barrel — will
+  appear as a 24th component on the next `/design-sync` run.
+- **New font role**: `--font-mono` (system stack, zero network weight) —
+  reserved for verifiable numbers only (calculator output, mockup
+  timestamps, the 01/02/03 in `HowItWorks`). See `conventions.md` for the
+  full rule; the design-sync self-check should be re-run against a fresh
+  build if this file is ever regenerated, since `--font-mono` is a new
+  token not in the original conventions draft.
+- **New hook**: `src/lib/useCountUp.ts` — no dependency, `requestAnimationFrame`
+  count-up for the calculator result. Also reduced-motion-gated.
+- `HowItWorks` changed from a 3-card grid to a connected vertical rail
+  (numbering was already justified — real 3-step process — the rail makes
+  that sequence relationship explicit instead of implicit).
+
+## Pasada de UI/UX 2026-08-13 (skill ui-ux-pro-max) — solo defectos, sin rediseño
+
+Revisión contra el checklist del skill. No se tocó ni la paleta ni el layout:
+todo lo de abajo son defectos medidos, no cambios de dirección visual.
+
+- **Contraste**: `--color-text-subtle` estaba en 3.5:1 (fallaba AA) y la nota
+  legal del footer usaba modificadores de opacidad que la dejaban en 2.1:1 —
+  justo el texto que las reglas 2 y 5 de CLAUDE.md exigen que se lea. Token
+  ahora en `#77917F` (4.8:1 sobre `bg-main`, 4.7:1 sobre `bg-card`) y sin
+  `/60`–`/40` en el footer. Verificado con las 23 combinaciones de texto de la
+  página compuestas contra su fondo real: 0 fallos.
+- **Área táctil**: `.pf-slider` medía 28px de alto — por debajo del mínimo de
+  44px, y es el control principal de la página en móvil. Ahora 44px; la pista
+  sigue en 8px y el thumb en 28px, así que **no cambia nada visualmente**.
+- **Lector de pantalla en la calculadora**: el `aria-live` envolvía la cifra
+  animada por `useCountUp`, así que cada arrastre disparaba ~27 anuncios (uno
+  por fotograma). Ahora hay una sola región `role="status"` permanente que
+  anuncia el valor ya asentado, y el bloque visual va `aria-hidden`.
+- **Slider**: `aria-valuetext` (antes anunciaba "1500" en vez de "S/ 1,500") y
+  `aria-describedby` hacia el hint.
+- `min-h-screen` → `min-h-dvh`; los `style={{fontFamily:'var(--font-mono)'}}`
+  sueltos pasaron a la utility `font-mono` (el token ya está en `@theme`).
+- `vite.config.ts` ignora `dist/`, `dist-lib/` y `.ds-sync/` en el watcher:
+  `build:lib` vacía `dist-lib/` y en Windows eso tumbaba el dev server con
+  EBUSY a media sesión.
+
 ## Preview scope
 
 Primera sync usó scope **floor-cards-only** (elección explícita del
@@ -61,6 +113,16 @@ incrementalmente en cualquier re-sync.
   internet access to fonts.googleapis.com, headings/body text will fall
   back to system fonts. Not addressed — no local font files exist in this
   repo to ship instead.
+- **That `@import` now lives in `src/index.lib.css`, not `src/index.css`** —
+  and the split is load-bearing, not an accident to tidy up. The app dropped
+  the `@import` because an `@import` inside the CSS bundle serializes the
+  request chain (browser must fetch+parse the app CSS before it even asks for
+  the font CSS), which hurts LCP on 4G; the landing loads fonts with a `<link>`
+  in `index.html` instead. The design pane can't inject anything into `<head>`
+  and only receives `styles.css`'s `@import` closure, so the library entry
+  (`src/index.ts` → `src/index.lib.css` → `./index.css`) keeps the `@import`.
+  **If you ever point `src/index.ts` back at `index.css` directly, design-sync
+  previews silently lose both brand fonts.**
 - **All components landed in `general`/`layout`/`sections` groups by
   directory** (`components/<group>/<Name>/` mirrors `src/components/<x>/`)
   — there's no `docsDir`/doc-based grouping since this repo has no

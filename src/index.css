@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap');
+/* Las fuentes NO se importan aquí a propósito: un @import dentro del bundle
+   obliga al navegador a descargar y parsear este CSS antes de siquiera pedir
+   el CSS de Google Fonts (cadena en serie). Van como <link> en index.html
+   para que ambas hojas viajen en paralelo. */
 @import "tailwindcss";
 
 @theme {
@@ -13,10 +16,17 @@
   --color-surface-2: #D8E2DA;
 
   /* ── Text ── */
+  /* Contraste medido y verificado con el fondo realmente compuesto:
+     main 14.6:1 · muted 6.5:1 · subtle 4.8:1 sobre bg-main, y subtle 4.7:1
+     sobre el fondo más claro del sitio (bg-card/40). Los tres pasan WCAG AA
+     (4.5:1) en todas las superficies. `subtle` es el color de las notas de
+     fuente de las cifras y de la nota legal — justo el texto que las reglas 2
+     y 5 de CLAUDE.md exigen que se pueda leer. Si lo oscureces, vuelve a
+     medirlo sobre bg-card, no solo sobre bg-main. */
   --color-text-main: #EDF2EE;
   --color-text-dark: #0F172A;
   --color-text-muted: #8FA899;
-  --color-text-subtle: #5E7A6A;
+  --color-text-subtle: #77917F;
 
   /* ── Brand ── */
   --color-primary-main: #1A4029;
@@ -37,6 +47,9 @@
   /* ── Fonts ── */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Playfair Display", Georgia, serif;
+  /* Reservada para cifras verificables: calculadora, timestamps del mockup.
+     Pila de sistema — cero peso de red. */
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
 }
 
 /* ── Base ── */
@@ -135,15 +148,21 @@ h1, h2, h3, h4 {
 }
 
 /* ── Slider de la calculadora ── */
+/* height 44px = el mínimo táctil de Apple HIG. La pista sigue midiendo 8px y
+   el thumb 28px: el alto extra es área de toque invisible, no cambia el
+   aspecto. Antes eran 28px y fallaba el mínimo justo en el control principal
+   de la página en móvil. */
 .pf-slider {
   --pf-slider-fill: 50%;
   width: 100%;
-  height: 28px;
+  height: 44px;
   appearance: none;
   -webkit-appearance: none;
   background: transparent;
   cursor: pointer;
   display: block;
+  /* Quita el retardo de 300ms al tocar, sin bloquear el scroll vertical. */
+  touch-action: pan-y;
 }
 
 /* El track se pinta con un gradiente duro en --pf-slider-fill: lima a la
@@ -225,6 +244,25 @@ h1, h2, h3, h4 {
 
 .animate-pulse-glow {
   animation: pulse-glow 4s ease-in-out infinite;
+}
+
+/* ── Mockup de WhatsApp (signature del hero) ── */
+@keyframes typing-dot {
+  0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-2px); }
+}
+
+.pf-typing-dot {
+  animation: typing-dot 1.3s ease-in-out infinite;
+}
+
+@keyframes bubble-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pf-bubble-in {
+  animation: bubble-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* ── Scrollbar ── */

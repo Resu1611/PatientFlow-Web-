@@ -19,6 +19,13 @@ export default defineConfig(({mode}) => {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
+      watch: {
+        // Sin esto, `npm run build:lib` tumba el dev server en Windows: la
+        // build vacia dist-lib/ con emptyOutDir mientras el watcher tiene los
+        // archivos abiertos y chokidar revienta con EBUSY. No son fuentes;
+        // no hay ninguna razon para vigilarlos.
+        ignored: ['**/dist/**', '**/dist-lib/**', '**/.ds-sync/**'],
+      },
     },
   };
 });

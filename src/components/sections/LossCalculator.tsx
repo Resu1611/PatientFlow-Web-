@@ -4,6 +4,7 @@ import Slider from '../ui/Slider';
 import Button from '../ui/Button';
 import { BOOKING_ANCHOR_ID } from '../../config';
 import { once, trackEvent } from '../../lib/analytics';
+import { useCountUp } from '../../lib/useCountUp';
 import { CALCULADORA, MODELO_PERDIDA, FUENTE_CIFRAS } from '../../data/landing';
 
 const soles = new Intl.NumberFormat('es-PE', {
@@ -34,6 +35,11 @@ export default function LossCalculator() {
     () => calcularPerdida(leads, ticket),
     [leads, ticket],
   );
+
+  // El número "cuenta" hacia el nuevo valor en vez de saltar — se siente
+  // calculado en vivo, no solo redibujado.
+  const dineroAnimado = useCountUp(dineroPerdidoMes);
+  const pacientesAnimados = useCountUp(pacientesPerdidosMes);
 
   const califica = leads >= MODELO_PERDIDA.LEADS_UMBRAL_CALIFICA;
 
@@ -81,23 +87,48 @@ export default function LossCalculator() {
             />
           </div>
 
-          <hr className="my-8 border-t border-border-subtle" />
+          {/* Línea de corte estilo recibo — separa los inputs del resultado. */}
+          <div
+            aria-hidden="true"
+            className="my-8 border-t border-dashed border-border-subtle"
+          />
+
+          {/* Una sola región viva, permanente y solo para lectores de pantalla.
+              Anuncia el valor ya asentado (no `dineroAnimado`): si se leyera la
+              cifra animada, cada arrastre del slider dispararía ~27 anuncios,
+              uno por fotograma del contador. Vive fuera del ternario a
+              propósito — un aria-live que se monta junto con su contenido no
+              se anuncia de forma fiable. */}
+          <p role="status" className="sr-only">
+            {califica
+              ? `${CALCULADORA.resultadoPrefijo}: ${soles.format(
+                  Math.round(dineroPerdidoMes),
+                )} ${CALCULADORA.resultadoSufijo} Aproximadamente ${entero.format(
+                  Math.round(pacientesPerdidosMes),
+                )} ${CALCULADORA.detallePacientes}.`
+              : CALCULADORA.descalificacion}
+          </p>
 
           {califica ? (
-            <div aria-live="polite">
-              <p className="text-sm text-text-muted mb-2">
-                {CALCULADORA.resultadoPrefijo}
-              </p>
-              <p className="text-4xl sm:text-5xl font-bold gradient-text-alert tabular-nums leading-none mb-2">
-                {soles.format(dineroPerdidoMes)}
-              </p>
-              <p className="text-sm text-text-muted mb-1">
-                {CALCULADORA.resultadoSufijo}
-              </p>
-              <p className="text-sm text-text-subtle">
-                ≈ {entero.format(pacientesPerdidosMes)}{' '}
-                {CALCULADORA.detallePacientes}
-              </p>
+            <div>
+              {/* Duplica lo que ya dice la región viva de arriba. */}
+              <div aria-hidden="true">
+                <p className="text-[0.7rem] tracking-widest uppercase text-text-subtle mb-3 font-mono">
+                  {CALCULADORA.resultadoPrefijo}
+                </p>
+                <p className="text-4xl sm:text-5xl font-bold gradient-text-alert tabular-nums leading-none mb-2 font-mono">
+                  {soles.format(Math.round(dineroAnimado))}
+                </p>
+                <p className="text-sm text-text-muted mb-1">
+                  {CALCULADORA.resultadoSufijo}
+                </p>
+                <p className="text-sm text-text-subtle tabular-nums font-mono">
+                  ≈ {entero.format(Math.round(pacientesAnimados))}{' '}
+                  <span className="font-sans">
+                    {CALCULADORA.detallePacientes}
+                  </span>
+                </p>
+              </div>
 
               <div className="mt-8">
                 <Button
@@ -123,7 +154,7 @@ export default function LossCalculator() {
           ) : (
             /* Descalificar es parte de la conversión — CLAUDE.md, regla 4. */
             <div
-              aria-live="polite"
+              aria-hidden="true"
               className="flex gap-4 items-start rounded-2xl border border-red-400/25 bg-red-500/5 p-5"
             >
               <TriangleAlert

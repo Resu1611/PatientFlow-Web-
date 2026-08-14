@@ -31,6 +31,7 @@ export default function Slider({
   hint,
 }: SliderProps) {
   const pct = ((value - min) / (max - min)) * 100;
+  const hintId = `${id}-hint`;
 
   return (
     <div>
@@ -38,7 +39,12 @@ export default function Slider({
         <label htmlFor={id} className="text-sm text-text-muted">
           {label}
         </label>
-        <span className="text-lg font-bold text-accent-main tabular-nums">
+        {/* El valor ya se anuncia por aria-valuetext; repetirlo aquí haría que
+            el lector de pantalla lo lea dos veces. */}
+        <span
+          aria-hidden="true"
+          className="text-lg font-bold text-accent-main tabular-nums font-mono"
+        >
           {valueLabel}
         </span>
       </div>
@@ -51,12 +57,19 @@ export default function Slider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
+        // Sin esto el lector anuncia "1500"; con esto, "S/ 1,500".
+        aria-valuetext={valueLabel}
+        aria-describedby={hint ? hintId : undefined}
         className="pf-slider"
         // El relleno lima a la izquierda del thumb se pinta con este %.
         style={{ ['--pf-slider-fill' as string]: `${pct}%` }}
       />
 
-      {hint && <p className="mt-2 text-xs text-text-subtle">{hint}</p>}
+      {hint && (
+        <p id={hintId} className="mt-2 text-xs text-text-subtle">
+          {hint}
+        </p>
+      )}
     </div>
   );
 }

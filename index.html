@@ -45,9 +45,15 @@
     />
     <meta name="twitter:image" content="https://patientflowscale.com/og-image.jpg" />
 
-    <!-- Acelera la descarga de las fuentes (el CSS las importa desde aquí) -->
+    <!-- Fuentes: preconnect + <link> directo. No moverlas a un @import dentro
+         del CSS — eso encadena las peticiones en serie y retrasa el LCP (el
+         H1 es Playfair). display=swap evita el texto invisible. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap"
+    />
 
     <!-- ⚠️ RENZO: el snippet de tu pixel (Meta / GA4) va aquí -->
   </head>

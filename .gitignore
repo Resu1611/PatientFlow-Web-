@@ -14,3 +14,8 @@ ds-bundle/
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync/node_modules
+
+# Tooling local: skills instaladas por CLI y clon de inspeccion.
+# Reinstalables (uipro init --ai claude); no son codigo del proyecto.
+.claude/
+ui-ux-pro-max-skill/

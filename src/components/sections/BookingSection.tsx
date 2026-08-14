@@ -52,7 +52,7 @@ export default function BookingSection() {
                 dentro de{' '}
                 <code className="font-mono text-accent-main/80">src/config.ts</code>.
               </p>
-              <p className="text-text-subtle/70 text-xs mt-4 font-mono">
+              <p className="text-text-subtle text-xs mt-4 font-mono">
                 GHL → Calendars → Share → copia la URL del src del iframe
               </p>
             </div>

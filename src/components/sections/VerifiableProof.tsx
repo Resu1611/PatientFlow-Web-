@@ -53,7 +53,7 @@ export default function VerifiableProof() {
             <p className="text-text-subtle text-xs sm:text-sm mt-2 max-w-sm">
               {PRUEBA.placeholderNota}
             </p>
-            <p className="text-text-subtle/70 text-xs mt-4 font-mono">
+            <p className="text-text-subtle text-xs mt-4 font-mono">
               1200 × 750 px · public/dashboard-tiempos-respuesta.png
             </p>
           </div>

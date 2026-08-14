@@ -22,11 +22,13 @@ export const colors = {
     alt: '#F4F7F4',
     muted: '#D8E2DA',
   },
+  /** Contraste sobre bg.main: main 14.6:1 · muted 6.5:1 · subtle 4.8:1 (AA).
+   *  `subtle` también pasa (4.7:1) sobre bg.card, la superficie más clara. */
   text: {
     main: '#EDF2EE',
     dark: '#0F172A',
     muted: '#8FA899',
-    subtle: '#5E7A6A',
+    subtle: '#77917F',
   },
   /** Verde institucional — botones sobre superficies claras. */
   primary: {
@@ -54,9 +56,19 @@ export const colors = {
   },
 } as const;
 
+/**
+ * Tres roles tipográficos, deliberados:
+ *  - `heading`  — Playfair Display. Autoridad editorial, no de SaaS genérico.
+ *  - `sans`     — Inter. Cuerpo de texto, neutral y legible.
+ *  - `mono`     — pila del sistema (sin descarga extra). Reservada SOLO para
+ *    cifras verificables: el resultado de la calculadora, el tiempo de
+ *    respuesta del mockup del hero, timestamps. Es el "acento tipográfico"
+ *    del sitio — señala "esto es un dato medido, no una promesa".
+ */
 export const fonts = {
   sans: '"Inter", ui-sans-serif, system-ui, sans-serif',
   heading: '"Playfair Display", Georgia, serif',
+  mono: 'ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace',
 } as const;
 
 /** Pesos realmente usados en la landing (los únicos que se descargan). */

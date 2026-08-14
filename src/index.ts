@@ -1,4 +1,7 @@
-import './index.css';
+// index.lib.css = index.css + las fuentes por @import. El panel de design-sync
+// no puede poner un <link> en el <head>, así que ahí las fuentes tienen que
+// viajar dentro del propio CSS. Ver el comentario en src/index.lib.css.
+import './index.lib.css';
 
 // Identidad visual y configuración
 export * as theme from './theme';
@@ -17,6 +20,7 @@ export { default as FaqItem } from './components/ui/FaqItem';
 export type { FaqItemProps } from './components/ui/FaqItem';
 export { default as Slider } from './components/ui/Slider';
 export type { SliderProps } from './components/ui/Slider';
+export { default as WhatsAppMockup } from './components/ui/WhatsAppMockup';
 
 // Layout
 export { default as Header } from './components/layout/Header';

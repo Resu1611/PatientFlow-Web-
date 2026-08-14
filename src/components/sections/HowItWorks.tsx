@@ -4,32 +4,48 @@ import { PASOS } from '../../data/landing';
 
 const ICONOS = [MessageSquare, Zap, CalendarCheck];
 
+/**
+ * Único lugar del sitio con marcadores numerados: es un proceso real de 3
+ * pasos donde el orden importa, así que el riel que conecta los nodos no es
+ * decoración — es la información (esto pasa, luego esto, luego esto).
+ */
 export default function HowItWorks() {
   return (
     <section className="py-12 lg:py-20">
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-main text-center mb-12 leading-tight">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-main text-center mb-14 leading-tight">
         Cómo funciona
       </h2>
 
-      <ol className="grid gap-5 md:grid-cols-3 max-w-5xl mx-auto">
+      <ol className="relative max-w-2xl mx-auto">
+        {/* El riel — una sola línea que atraviesa los tres nodos. */}
+        <div
+          aria-hidden="true"
+          className="absolute left-[27px] top-6 bottom-6 w-px bg-gradient-to-b from-accent-main/40 via-accent-main/15 to-transparent"
+        />
+
         {PASOS.map((paso, i) => {
           const Icono = ICONOS[i] ?? MessageSquare;
+          const esUltimo = i === PASOS.length - 1;
           return (
-            <li key={paso.numero} className="glass-card rounded-2xl p-6 flex flex-col">
-              <div className="flex items-center justify-between mb-5">
-                <span className="w-11 h-11 rounded-xl bg-accent-main/10 flex items-center justify-center shrink-0">
-                  <Icono className="w-5 h-5 text-accent-main" aria-hidden="true" />
-                </span>
+            <li
+              key={paso.numero}
+              className={`relative flex gap-5 items-start ${esUltimo ? '' : 'pb-10'}`}
+            >
+              <span className="relative z-10 shrink-0 w-14 h-14 rounded-2xl glass-card border-accent-main/25 flex items-center justify-center">
+                <Icono className="w-6 h-6 text-accent-main" aria-hidden="true" />
+              </span>
+
+              <div className="pt-3">
                 <span
-                  className="font-mono text-2xl font-bold text-accent-main/20"
+                  className="block text-xs tracking-widest text-accent-main/60 mb-1.5 font-mono"
                   aria-hidden="true"
                 >
                   {paso.numero}
                 </span>
+                <p className="text-text-main text-[0.95rem] sm:text-base leading-relaxed max-w-md">
+                  {paso.texto}
+                </p>
               </div>
-              <p className="text-text-main text-[0.95rem] leading-relaxed">
-                {paso.texto}
-              </p>
             </li>
           );
         })}

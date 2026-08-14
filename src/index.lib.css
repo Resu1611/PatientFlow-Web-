@@ -1,0 +1,13 @@
+/* Entrada CSS EXCLUSIVA de la build de librería (`npm run build:lib`, para
+   design-sync). No la importa la app.
+ *
+ * Aquí las fuentes sí van por @import y no por <link>, al revés que en la
+ * landing: un diseño renderizado en claude.ai/design solo recibe el cierre de
+ * @import de `styles.css` y no puede inyectar nada en el <head>. Si se quitan
+ * de aquí, los componentes del panel de diseño caen a fuentes de sistema.
+ *
+ * La app usa `src/index.css` directamente (ver src/main.tsx) y carga las
+ * fuentes con <link> en index.html, que es más rápido — ahí sí se controla el
+ * <head> y así las dos hojas de estilo viajan en paralelo. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap');
+@import "./index.css";
