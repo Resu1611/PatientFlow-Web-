@@ -1,31 +1,44 @@
 import React from 'react';
 import { BadgeCheck } from 'lucide-react';
+import GlassCard from '../ui/GlassCard';
+import IconChip from '../ui/IconChip';
 import { GARANTIA } from '../../data/landing';
 
+/**
+ * La garantía es lo único de esta página que a Renzo le cuesta dinero si falla,
+ * y lo único que una agencia no puede copiar sin cambiar su modelo de negocio.
+ * Estaba puesta como si fuera una nota al pie: un h2 de 12px en mayúsculas —
+ * o sea con el tamaño de un eyebrow — dentro de la sección más corta de la
+ * página, mientras un recuadro vacío a la espera de una captura se llevaba un
+ * titular de 36px. Ahora tiene el peso de sección que le corresponde.
+ *
+ * Movida además justo encima del calendario (ver LandingPage.tsx): lo último
+ * que se lee antes de agendar debe ser la reversión de riesgo, no una pregunta
+ * frecuente sobre números de WhatsApp.
+ *
+ * Se le quitó la barra dorada vertical de 6px del borde izquierdo: es
+ * decoración de plantilla, y el sobre dorado de la tarjeta con el chip ya
+ * dicen "esto es distinto" sin ella.
+ */
 export default function Guarantee() {
   return (
-    <section className="py-8 lg:py-12">
-      <div className="glass-card-gold rounded-3xl p-7 sm:p-10 max-w-3xl mx-auto relative overflow-hidden">
-        {/* Barra dorada lateral, como en el sitio original. */}
-        <div
-          className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-gold-light to-gold"
-          aria-hidden="true"
-        />
+    <section className="py-16 lg:py-28">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-main text-center mb-10 leading-tight">
+          {GARANTIA.etiqueta}
+        </h2>
 
-        <div className="pl-4 sm:pl-5 flex flex-col sm:flex-row gap-5 sm:gap-6 sm:items-start">
-          <span className="w-12 h-12 rounded-2xl bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
-            <BadgeCheck className="w-6 h-6 text-gold" aria-hidden="true" />
-          </span>
-
-          <div>
-            <h2 className="text-gold text-xs font-semibold tracking-widest uppercase mb-3">
-              {GARANTIA.etiqueta}
-            </h2>
-            <p className="text-text-main text-base sm:text-lg leading-relaxed">
-              {GARANTIA.texto}
-            </p>
-          </div>
-        </div>
+        <GlassCard
+          variant="gold"
+          padding="lg"
+          radius="lg"
+          className="flex flex-col sm:flex-row gap-6 sm:items-start"
+        >
+          <IconChip icon={BadgeCheck} tone="gold" size="lg" />
+          <p className="text-text-main text-base sm:text-lg leading-relaxed">
+            {GARANTIA.texto}
+          </p>
+        </GlassCard>
       </div>
     </section>
   );

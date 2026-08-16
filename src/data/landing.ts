@@ -29,6 +29,14 @@ export interface Fuga {
   numero: string;
   nombre: string;
   texto: string;
+  /**
+   * El problema en una línea. No es copy nuevo: es la compresión literal de
+   * `texto`, y existe porque la sección "Las 4 piezas" queda nueve pantallas
+   * más abajo y decía "Tapa la fuga nocturna" dando por hecho que el visitante
+   * recordaba qué era la fuga nocturna. Ahora la pieza se lleva el problema
+   * consigo en vez de mandarlo a buscarlo.
+   */
+  resumen: string;
 }
 
 export const FUGAS_SECCION = {
@@ -43,24 +51,28 @@ export const FUGAS: Fuga[] = [
     nombre: 'La fuga nocturna',
     texto:
       'El 40% de los pacientes escribe fuera del horario de atención. Si nadie responde hasta el otro día, la mayoría ya agendó en otro lado.',
+    resumen: 'El 40% escribe fuera de horario',
   },
   {
     numero: '02',
     nombre: 'La llamada perdida',
     texto:
       'Cada llamada que no se devuelve es una consulta que pagaste con tus anuncios y regalaste a la competencia.',
+    resumen: 'La llamada que no se devuelve',
   },
   {
     numero: '03',
     nombre: 'El seguimiento roto',
     texto:
       'Unos leads reciben tres mensajes, otros ninguno. Depende de quién esté libre ese día. No es un sistema, es suerte.',
+    resumen: 'Unos reciben tres mensajes, otros ninguno',
   },
   {
     numero: '04',
     nombre: 'El no-show',
     texto:
       'La agenda se ve llena, pero un tercio no aparece. Y una agenda llena de gente que no llega no paga la renta.',
+    resumen: 'Un tercio no aparece',
   },
 ];
 

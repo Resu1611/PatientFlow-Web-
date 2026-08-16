@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { ArrowRight, TriangleAlert } from 'lucide-react';
 import Slider from '../ui/Slider';
 import Button from '../ui/Button';
+import GlassCard from '../ui/GlassCard';
 import { BOOKING_ANCHOR_ID } from '../../config';
 import { once, trackEvent } from '../../lib/analytics';
 import { useCountUp } from '../../lib/useCountUp';
@@ -44,7 +45,9 @@ export default function LossCalculator() {
   const califica = leads >= MODELO_PERDIDA.LEADS_UMBRAL_CALIFICA;
 
   return (
-    <section className="py-12 lg:py-20">
+    // Ritmo largo: junto con la garantía y el calendario, es uno de los tres
+    // momentos que cargan la conversión. El aire extra ES la jerarquía.
+    <section className="py-16 lg:py-28">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-main mb-4 leading-tight">
@@ -55,7 +58,7 @@ export default function LossCalculator() {
           </p>
         </div>
 
-        <div className="glass-card rounded-3xl p-6 sm:p-9">
+        <GlassCard padding="lg" radius="lg">
           <div className="space-y-8">
             <Slider
               id="leads-semanales"
@@ -109,14 +112,18 @@ export default function LossCalculator() {
               : CALCULADORA.descalificacion}
           </p>
 
+          {/* La `key` es lo que hace que la transición ocurra: al cambiar,
+              React desmonta un bloque y monta el otro, y `.pf-state-in` corre
+              de nuevo. Arrastrar el slider dentro de la misma rama no cambia
+              la key, así que la cifra no parpadea en cada píxel. */}
           {califica ? (
-            <div>
+            <div key="califica" className="pf-state-in">
               {/* Duplica lo que ya dice la región viva de arriba. */}
               <div aria-hidden="true">
                 <p className="text-[0.7rem] tracking-widest uppercase text-text-subtle mb-3 font-mono">
                   {CALCULADORA.resultadoPrefijo}
                 </p>
-                <p className="text-4xl sm:text-5xl font-bold gradient-text-alert tabular-nums leading-none mb-2 font-mono">
+                <p className="text-4xl sm:text-5xl font-bold text-alert-main tabular-nums leading-none mb-2 font-mono">
                   {soles.format(Math.round(dineroAnimado))}
                 </p>
                 <p className="text-sm text-text-muted mb-1">
@@ -139,7 +146,7 @@ export default function LossCalculator() {
                   fullWidth
                   className="sm:w-auto"
                   onClick={() =>
-                    trackEvent('cta_hero_click', {
+                    trackEvent('cta_final_click', {
                       ubicacion: 'calculadora',
                       leads,
                       ticket,
@@ -154,8 +161,9 @@ export default function LossCalculator() {
           ) : (
             /* Descalificar es parte de la conversión — CLAUDE.md, regla 4. */
             <div
+              key="descalifica"
               aria-hidden="true"
-              className="flex gap-4 items-start rounded-2xl border border-red-400/25 bg-red-500/5 p-5"
+              className="pf-state-in flex gap-4 items-start rounded-2xl border border-red-400/25 bg-red-500/5 p-5"
             >
               <TriangleAlert
                 className="w-5 h-5 text-red-400 shrink-0 mt-0.5"
@@ -166,7 +174,7 @@ export default function LossCalculator() {
               </p>
             </div>
           )}
-        </div>
+        </GlassCard>
 
         <p className="mt-5 text-xs text-text-subtle text-center max-w-xl mx-auto leading-relaxed">
           {FUENTE_CIFRAS}

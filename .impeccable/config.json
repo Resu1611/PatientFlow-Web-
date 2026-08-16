@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-08-16T05:54:35.295Z",
+        "reason": "Decision documented in src/theme.ts:62-70: three deliberate type roles — Playfair Display carries the display voice (h1/h2 only, as of this pass), Inter is body-only, system mono is reserved for verifiable figures. The rule's concern (undistinctive typography) is answered by the Didone display face; swapping the body face would be an identity change, not a refinement."
+      }
+    ]
+  }
+}

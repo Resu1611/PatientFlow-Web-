@@ -16,19 +16,27 @@ export const colors = {
     alt: '#071A11',
     card: '#0F2B1C',
   },
-  /** Superficies claras, para secciones que rompen el fondo oscuro. */
+  /** Superficies claras. Las usa la banda clara del medio de la página
+   *  (Benchmarks → HowItWorks → SystemPieces): oscuro donde vive el problema,
+   *  claro donde vive la solución. Ver `.band-light` en src/index.css. */
   surface: {
     main: '#EAF0EB',
     alt: '#F4F7F4',
     muted: '#D8E2DA',
   },
-  /** Contraste sobre bg.main: main 14.6:1 · muted 6.5:1 · subtle 4.8:1 (AA).
-   *  `subtle` también pasa (4.7:1) sobre bg.card, la superficie más clara. */
+  /** Contraste medido en el navegador. Sobre bg.main: main 14.6:1 ·
+   *  muted 6.5:1 · subtle 5.3:1. Sobre la tarjeta de vidrio, que es la
+   *  superficie más clara y por tanto el caso peor: main 13.2:1 ·
+   *  muted 5.8:1 · subtle 4.8:1. Todos pasan AA (4.5:1). Ver la nota larga
+   *  en src/index.css antes de tocar `subtle`. */
   text: {
     main: '#EDF2EE',
-    dark: '#0F172A',
     muted: '#8FA899',
-    subtle: '#77917F',
+    subtle: '#7E9885',
+    /** Sobre la banda clara. dark 15.8:1 · darkMuted 6.8:1 sobre surface.main;
+     *  13.6:1 y 5.9:1 sobre surface.muted, que es el caso peor de la banda. */
+    dark: '#0F172A',
+    darkMuted: '#45564C',
   },
   /** Verde institucional — botones sobre superficies claras. */
   primary: {
@@ -89,9 +97,23 @@ export const radius = {
   '2xl': '2rem',
 } as const;
 
-/** Ritmo vertical de las secciones (mobile-first). */
+/**
+ * Ritmo vertical de las secciones (mobile-first).
+ *
+ * Antes había un solo valor y las 12 secciones lo usaban: con el mismo aire
+ * arriba y abajo de todo, nada pesaba más que nada y la página se leía como
+ * una lista. Tres pasos, asignados por lo que carga cada sección:
+ *
+ *  - `sectionYTight` — beats de apoyo que sostienen un argumento ajeno
+ *    (HowItWorks, DemoExpectations, Faq).
+ *  - `sectionY`      — la sección estándar.
+ *  - `sectionYLoose` — los tres momentos que cargan la conversión: la
+ *    calculadora, la garantía y el calendario. El aire extra ES la jerarquía.
+ */
 export const spacing = {
+  sectionYTight: 'py-10 lg:py-14',
   sectionY: 'py-12 lg:py-20',
+  sectionYLoose: 'py-16 lg:py-28',
   containerX: 'px-5 lg:px-8',
   containerMax: 'max-w-6xl',
 } as const;

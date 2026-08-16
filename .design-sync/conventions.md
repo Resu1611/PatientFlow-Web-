@@ -38,9 +38,9 @@ siempre como estimación de investigación pública, no como dato propietario.
 |---|---|
 | `.glass-card` / `.glass-card-gold` | Tarjeta translúcida con blur — el contenedor por defecto de todo bloque sobre fondo oscuro. Variante dorada para la garantía. |
 | `.btn-primary` | Botón lima de CTA (hover con elevación y glow). Lo aplica `Button variant="primary"`. |
-| `.gradient-text-lime` / `.gradient-text-gold` / `.gradient-text-alert` | Relleno degradado para frases destacadas dentro de un heading. **`alert` es exclusivo de cifras de pérdida.** |
+| `.band-light` | Banda clara de ancho completo (Benchmarks → HowItWorks → SystemPieces). Oscuro donde vive el problema, claro donde vive la solución. La aplica `Band tone="light"`. |
+| `.solid-card` | La tarjeta dentro de la banda clara — sin blur. La aplica `GlassCard variant="light"`. |
 | `.glow-lime` / `.glow-gold` | Glow suave, uso puntual. |
-| `.bg-grid` | Textura de rejilla de fondo (decorativa, absolute). |
 | `.pf-slider` | Estilo del `<input type="range">` del componente `Slider`. |
 | `.animate-float-slow` / `.animate-pulse-glow` | Blobs decorativos ambientales. |
 | `.pf-typing-dot` / `.pf-bubble-in` | Animaciones del mockup de WhatsApp del hero (punto de "escribiendo…", burbuja que aparece). Únicas animaciones ligadas a UN componente específico — no reutilizar fuera de `WhatsAppMockup`. |

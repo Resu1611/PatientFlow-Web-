@@ -6,7 +6,8 @@ export default function Faq() {
   const [abierta, setAbierta] = useState<number | null>(null);
 
   return (
-    <section className="py-12 lg:py-20">
+    // Ritmo corto: el FAQ resuelve objeciones sueltas, no carga un argumento.
+    <section className="py-10 lg:py-14">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-main text-center mb-12 leading-tight">
           Preguntas frecuentes

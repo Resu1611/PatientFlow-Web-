@@ -16,17 +16,31 @@
   --color-surface-2: #D8E2DA;
 
   /* ── Text ── */
-  /* Contraste medido y verificado con el fondo realmente compuesto:
-     main 14.6:1 · muted 6.5:1 · subtle 4.8:1 sobre bg-main, y subtle 4.7:1
-     sobre el fondo más claro del sitio (bg-card/40). Los tres pasan WCAG AA
-     (4.5:1) en todas las superficies. `subtle` es el color de las notas de
-     fuente de las cifras y de la nota legal — justo el texto que las reglas 2
-     y 5 de CLAUDE.md exigen que se pueda leer. Si lo oscureces, vuelve a
-     medirlo sobre bg-card, no solo sobre bg-main. */
+  /* Contraste medido en el navegador sobre el fondo realmente compuesto, no
+     calculado a mano. La superficie de referencia ya no es bg-main sino la
+     tarjeta de vidrio (compone a rgb(17,44,30)): al elevarla se volvió la
+     superficie más clara de la página, o sea el caso peor.
+       sobre tarjeta — main 13.2:1 · muted 5.8:1 · subtle 4.8:1
+       sobre bg-main — main 14.6:1 · muted 6.5:1 · subtle 5.3:1
+     `subtle` se aclaró de #77917F a #7E9885 junto con esa elevación: sobre la
+     superficie nueva el valor viejo medía 4.36:1 y quedaba bajo el mínimo AA.
+     Es el color de las notas de fuente de las cifras y de la nota legal —
+     justo el texto que las reglas 2 y 5 de CLAUDE.md exigen que se pueda
+     leer. Si lo oscureces, vuelve a medirlo sobre la tarjeta, no sobre
+     bg-main. */
   --color-text-main: #EDF2EE;
-  --color-text-dark: #0F172A;
   --color-text-muted: #8FA899;
-  --color-text-subtle: #77917F;
+  --color-text-subtle: #7E9885;
+
+  /* Texto sobre la banda clara. Mismo trabajo que main/muted/subtle, pero al
+     otro lado del contraste. Medidos sobre surface-main (#EAF0EB):
+       dark 15.8:1 · dark-muted 6.8:1
+     y sobre surface-2 (#D8E2DA), la superficie más oscura de la banda:
+       dark 13.6:1 · dark-muted 5.9:1
+     Todos pasan AA. `dark-muted` es el equivalente claro de `text-muted`: si
+     lo aclaras, vuelve a medirlo sobre surface-2, no sobre surface-main. */
+  --color-text-dark: #0F172A;
+  --color-text-dark-muted: #45564C;
 
   /* ── Brand ── */
   --color-primary-main: #1A4029;
@@ -43,6 +57,15 @@
   /* ── Borders ── */
   --color-border-subtle: rgba(206,248,141,0.10);
   --color-border-gold: rgba(212,175,55,0.25);
+
+  /* ── Elevación ──
+     Las tarjetas son la estructura de 9 de las 12 secciones: si no se
+     despegan del fondo, la página entera se lee plana. Las dos sombras van
+     con desplazamiento vertical y desenfoque suave (una halo sin offset es
+     decoración, no profundidad). `--shadow-card` es la de las tarjetas;
+     `--shadow-media` la de imágenes y embeds, que cargan más peso visual. */
+  --shadow-card: 0 18px 40px -24px rgba(0,0,0,0.90), 0 4px 12px -6px rgba(0,0,0,0.50);
+  --shadow-media: 0 24px 60px rgba(0,0,0,0.35);
 
   /* ── Fonts ── */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -67,55 +90,124 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4 {
+/* Playfair se queda en h1/h2 — la voz de sección — y no baja a h3/h4.
+   Estaba aplicada hasta los 14px: títulos de tarjeta, nombres de pieza y
+   preguntas del FAQ. A ese tamaño y sobre verde oscuro, los remates finos de
+   una Didone se adelgazan hasta desaparecer y la lista de FAQ se leía
+   notoriamente más blanda que el resto de la página. Con Inter en bold, los
+   h3 ganan peso y la fuente de display recupera su trabajo: marcar dónde
+   empieza una sección. */
+h1, h2 {
   font-family: theme('fontFamily.heading');
 }
 
-/* ── Background Grid ── */
-.bg-grid {
-  background-size: 48px 48px;
-  background-image:
-    linear-gradient(to right, rgba(206,248,141,0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(206,248,141,0.04) 1px, transparent 1px);
-  mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+/* ── Componentes ──
+   Van dentro de `@layer components` a propósito. El CSS sin capa gana SIEMPRE
+   sobre el CSS en capa, sin importar la especificidad, y las utilidades de
+   Tailwind v4 viven en `@layer utilities`. Cuando estas clases estaban fuera
+   de toda capa, cualquier utilidad que intentara pisarlas se descartaba en
+   silencio: `glass-card border-accent-main/25` (nodos de HowItWorks, eyebrow
+   lima) y el borde del acordeón abierto no se aplicaban nunca. Si mueves una
+   clase de aquí al nivel superior, esos overrides vuelven a morir. */
+@layer components {
+  /* `.bg-grid` vivía aquí: una retícula de hairlines a 48px sobre el hero.
+     Se borró. Era el patrón de fondo genérico que traía el export original y
+     no tenía ningún trabajo que hacer en esta página — no hay lienzo, ni mapa,
+     ni plano, ni nada que medir. A 0.04 de alfa apenas se veía, y ese es el
+     argumento para quitarla, no para dejarla: si no se ve, tampoco está
+     aportando. La atmósfera del hero la llevan las manchas radiales de
+     DecorativeBackground, y el hero de verdad es el mockup de WhatsApp. */
+
+  /* ── Glass Card ──
+     El fondo compone a ~#112C1E sobre bg-main, es decir el token bg-card:
+     antes era bg-main al 60%, o sea exactamente el color de la página, y la
+     tarjeta solo existía por su borde de 1px. Contraste re-medido sobre esa
+     superficie compuesta: text-muted 5.9:1 · text-subtle 4.8:1 (AA).
+     La primera sombra es el filo superior del vidrio; las otras dos, la
+     elevación real. */
+  .glass-card {
+    background: rgba(19, 48, 33, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(206,248,141,0.12);
+    box-shadow:
+      inset 0 1px 0 0 rgba(206,248,141,0.06),
+      var(--shadow-card);
+  }
+
+  .glass-card-gold {
+    background: rgba(19, 48, 33, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(212,175,55,0.20);
+    box-shadow:
+      inset 0 1px 0 0 rgba(232,203,90,0.08),
+      var(--shadow-card);
+  }
+
+  /* ── Banda clara ──
+     Los tokens surface-* estaban declarados desde el principio "para secciones
+     que rompen el fondo oscuro" y no los usaba nadie: la página eran ~9.900px
+     de verde sin una sola interrupción. Esta banda los activa, y no como
+     variedad decorativa — el corte cae exactamente donde el argumento cambia
+     de dueño. Oscuro donde vive el problema (fugas, la cifra que pierdes),
+     claro donde vive la solución (qué cambia, cómo funciona, qué se instala),
+     y vuelta al oscuro para la prueba y el cierre. Salir del verde ES el
+     mensaje, así que la banda se lee como un documento distinto, no como una
+     sección más pintada de otro color.
+
+     El degradado de los bordes evita el corte duro contra el verde: la banda
+     entra y sale, no aparece de golpe.
+
+     Los extremos son surface-main con alfa 0, no `transparent` a secas:
+     `transparent` es negro transparente, y aunque Chrome premultiplica, el
+     tramo de entrada pasaba por un gris visible antes de llegar al papel. Con
+     el color propio al 0% el degradado va del verde al claro sin escala
+     intermedia. */
+  .band-light {
+    background:
+      linear-gradient(to bottom,
+        rgb(234 240 235 / 0) 0,
+        var(--color-surface-main) 72px,
+        var(--color-surface-alt) 45%,
+        var(--color-surface-main) calc(100% - 72px),
+        rgb(234 240 235 / 0) 100%);
+    color: var(--color-text-dark);
+  }
+
+  /* La banda invierte también las superficies del navegador que no dibujamos:
+     sobre papel claro la selección lima sobre verde queda ilegible. */
+  .band-light ::selection {
+    background: var(--color-primary-main);
+    color: var(--color-surface-main);
+  }
+
+  /* ── Tarjeta sólida ──
+     El equivalente de .glass-card dentro de la banda clara. No lleva blur:
+     el vidrio existe para dejar ver el verde y las manchas de luz detrás, y
+     sobre papel no hay nada que dejar ver. Sombra con desplazamiento y
+     desenfoque suave, igual que la oscura — el mismo sistema de elevación,
+     leído desde el otro lado. */
+  .solid-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+      0 12px 28px -18px rgba(15, 23, 42, 0.45),
+      0 3px 8px -5px rgba(15, 23, 42, 0.20);
+  }
 }
 
-/* ── Glass Card ── */
-.glass-card {
-  background: rgba(13, 35, 24, 0.60);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(206,248,141,0.12);
-}
-
-.glass-card-gold {
-  background: rgba(13, 35, 24, 0.60);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(212,175,55,0.20);
-}
-
-/* ── Gradient text ── */
-.gradient-text-lime {
-  background: linear-gradient(135deg, #CEF88D 0%, #A8E860 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-gold {
-  background: linear-gradient(135deg, #E8CB5A 0%, #D4AF37 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-alert {
-  background: linear-gradient(135deg, #FCA5A5 0%, #EF4444 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* Las tres clases .gradient-text-* vivían aquí y se borraron:
+   `lime` y `gold` no tenían ni un solo uso en src/; `alert` sí lo tenía, en la
+   cifra del H1 y en el resultado de la calculadora — es decir, en las dos
+   cadenas más importantes de la página, y las ponía detrás de
+   `-webkit-text-fill-color: transparent`, que desaparece entero bajo el modo
+   de colores forzados de Windows. El token sólido --color-alert-main mide
+   5.98:1 sobre bg-main (el extremo oscuro del gradiente medía 4.39:1), así
+   que además de sobrevivir a forced-colors sube el contraste. El énfasis de
+   esas cifras ya lo cargan el tamaño y el peso; el gradiente no aportaba
+   jerarquía, solo textura. */
 
 /* ── Glow effects ── */
 .glow-lime {
@@ -127,24 +219,28 @@ h1, h2, h3, h4 {
 }
 
 /* ── CTA Button ── */
-.btn-primary {
-  background-color: theme('colors.accent-main');
-  color: theme('colors.bg-main');
-  font-weight: 700;
-  transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
-  box-shadow: 0 4px 20px rgba(206,248,141,0.35);
-  cursor: pointer;
-}
+/* En `@layer components` por el mismo motivo que las tarjetas: así el
+   `className` que recibe <Button> puede pisar cualquier propiedad. */
+@layer components {
+  .btn-primary {
+    background-color: theme('colors.accent-main');
+    color: theme('colors.bg-main');
+    font-weight: 700;
+    transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+    box-shadow: 0 4px 20px rgba(206,248,141,0.35);
+    cursor: pointer;
+  }
 
-.btn-primary:hover {
-  background-color: theme('colors.accent-hover');
-  transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(206,248,141,0.50);
-}
+  .btn-primary:hover {
+    background-color: theme('colors.accent-hover');
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(206,248,141,0.50);
+  }
 
-.btn-primary:active {
-  transform: translateY(0);
-  background-color: theme('colors.accent-hover');
+  .btn-primary:active {
+    transform: translateY(0);
+    background-color: theme('colors.accent-hover');
+  }
 }
 
 /* ── Slider de la calculadora ── */
@@ -271,12 +367,107 @@ h1, h2, h3, h4 {
 ::-webkit-scrollbar-thumb { background: theme('colors.primary-main'); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: theme('colors.accent-main'); }
 
-/* ── Accesibilidad: respeta la preferencia del sistema ── */
+/* ── Entrada del hero ──
+   La entrada no es un efecto aparte: es el compás −1 de la escena del mockup.
+   Primero resuelve la columna de texto, después llegan los dos paneles como
+   marco vacío, y recién entonces cae el primer mensaje en ambos a la vez —
+   que es el compás 0 del bucle. Una sola secuencia, no dos compitiendo por el
+   primer segundo.
+
+   El H1 es el elemento de LCP y CLAUDE.md pide <2s en 4G. Un elemento en
+   `opacity: 0` no cuenta como pintado, así que la cascada del texto es corta
+   y arranca en 0ms de retardo: el titular no espera a nadie. El tiempo
+   autoral se gasta en los paneles, que no son LCP.
+
+   El retardo se pasa por `--pf-hero-delay` desde el componente para que la
+   secuencia se lea en el JSX y no repartida en cinco clases. */
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pf-hero-in {
+  animation: hero-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--pf-hero-delay, 0ms);
+}
+
+/* Los paneles llegan con más recorrido y más tiempo: son el objeto que la
+   escena va a habitar, no una línea de texto. Sin `scale` a propósito —
+   escalar una superficie con backdrop-filter obliga a recomponer el blur en
+   cada fotograma y es justo el gasto que no vale la pena en un gama baja. */
+@keyframes hero-panel-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pf-hero-panel-in {
+  animation: hero-panel-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--pf-hero-delay, 0ms);
+}
+
+/* ── Cambio de estado de la calculadora ──
+   Cruzar el umbral de 10 consultas no cambia un dato: cambia el bloque
+   entero — la cifra de 48px y el CTA desaparecen y en su lugar aparece una
+   negativa. Sin transición eso se lee como un fallo de renderizado, no como
+   una respuesta del sistema a lo que acabas de hacer. 260ms y una subida de
+   4px bastan para que el bloque se lea como sustituido a propósito. */
+@keyframes state-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pf-state-in {
+  animation: state-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Accesibilidad: respeta la preferencia del sistema ──
+   Antes esto era una regla única que ponía TODA animación y TODA transición
+   en 0.01ms. Es demasiado brusco: mata también el color y la opacidad, que
+   son justo lo que confirma que una acción tuvo efecto — el resultado de la
+   calculadora cambiando de estado, el calendario apareciendo al cargar, el
+   acordeón abriéndose. Reducir movimiento no es apagar el feedback.
+
+   Lo que se va: los bucles de ambiente, la escena del hero y cualquier
+   desplazamiento. Lo que se queda: opacidad y color, más cortos. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+
+  .animate-float-slow,
+  .animate-pulse-glow,
+  .animate-pulse,
+  .pf-typing-dot,
+  .pf-bubble-in {
+    animation: none !important;
   }
+
+  /* La entrada del hero se cae entera: es movimiento de escena, no feedback
+     de una acción. Sin ella el hero simplemente ya está ahí, que es el
+     resultado correcto — y sin retardos, porque un retardo sin animación es
+     solo contenido que tarda en aparecer. */
+  .pf-hero-in,
+  .pf-hero-panel-in {
+    animation: none !important;
+    animation-delay: 0ms !important;
+  }
+
+  /* El cambio de estado conserva su señal, sin el desplazamiento. */
+  @keyframes state-in-reduced {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .pf-state-in {
+    animation: state-in-reduced 160ms linear both !important;
+  }
+
+  *, *::before, *::after {
+    transition-property:
+      opacity, color, background-color, border-color, box-shadow, fill, stroke !important;
+    transition-duration: 160ms !important;
+  }
+
+  /* Ningún elemento se mueve al interactuar. */
+  .btn-primary:hover,
+  .btn-primary:active { transform: none; }
+  .pf-slider:active::-webkit-slider-thumb { transform: none; }
+  .pf-slider:active::-moz-range-thumb { transform: none; }
 }

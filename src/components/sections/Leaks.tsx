@@ -1,5 +1,7 @@
 import React from 'react';
 import { MoonStar, PhoneMissed, Unlink2, CalendarX2 } from 'lucide-react';
+import GlassCard from '../ui/GlassCard';
+import IconChip from '../ui/IconChip';
 import { FUGAS, FUGAS_SECCION, FUENTE_CIFRAS } from '../../data/landing';
 
 const ICONOS = [MoonStar, PhoneMissed, Unlink2, CalendarX2];
@@ -10,9 +12,13 @@ const ICONOS = [MoonStar, PhoneMissed, Unlink2, CalendarX2];
  * distinto del riel secuencial de HowItWorks, porque aquí el orden NO es
  * información: son cuatro fugas paralelas, no una secuencia.
  *
- * Los badges usan el rojo genérico de Tailwind (mismo criterio que la columna
- * "No es para ti" de Qualification) — NUNCA el token --color-alert-main ni
- * .gradient-text-alert, que son exclusivos de cifras de pérdida (regla 2).
+ * Por eso mismo las tarjetas ya no muestran el 01–04: era numeración
+ * decorativa contradiciendo lo que dice esta misma nota. El campo `numero`
+ * sigue en los datos como identificador estable (la key de React).
+ *
+ * Los íconos usan el rojo genérico de Tailwind vía IconChip (mismo criterio
+ * que la columna "No es para ti" de Qualification) — NUNCA el token
+ * --color-alert-main ni .gradient-text-alert, exclusivos de cifras (regla 2).
  */
 export default function Leaks() {
   return (
@@ -22,28 +28,17 @@ export default function Leaks() {
       </h2>
 
       <div className="grid gap-5 md:grid-cols-2 max-w-4xl mx-auto">
-        {FUGAS.map((fuga, i) => {
-          const Icono = ICONOS[i] ?? MoonStar;
-          return (
-            <div key={fuga.numero} className="glass-card rounded-2xl p-6 sm:p-7">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-11 h-11 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
-                  <Icono className="w-5 h-5 text-red-400" aria-hidden="true" />
-                </span>
-                <span
-                  className="font-mono text-xs tracking-widest text-text-subtle"
-                  aria-hidden="true"
-                >
-                  {fuga.numero}
-                </span>
-              </div>
-              <h3 className="text-text-main font-bold text-base sm:text-lg mb-2">
+        {FUGAS.map((fuga, i) => (
+          <GlassCard key={fuga.numero}>
+            <div className="flex items-center gap-3 mb-3">
+              <IconChip icon={ICONOS[i] ?? MoonStar} tone="alert" />
+              <h3 className="text-text-main font-bold text-base sm:text-lg leading-snug">
                 {fuga.nombre}
               </h3>
-              <p className="text-text-muted text-sm leading-relaxed">{fuga.texto}</p>
             </div>
-          );
-        })}
+            <p className="text-text-muted text-sm leading-relaxed">{fuga.texto}</p>
+          </GlassCard>
+        ))}
       </div>
 
       <p className="mt-10 text-text-main text-center max-w-xl mx-auto text-sm sm:text-base leading-relaxed">

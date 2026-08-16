@@ -3,7 +3,6 @@ import React from 'react';
 export default function DecorativeBackground() {
   return (
     <>
-      <div className="absolute inset-0 bg-grid pointer-events-none" />
       <div
         className="absolute top-0 left-[-10%] w-[600px] h-[600px] rounded-full pointer-events-none animate-pulse-glow"
         style={{ background: 'radial-gradient(circle, rgba(26,64,41,0.7) 0%, transparent 70%)' }}

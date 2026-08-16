@@ -33,7 +33,7 @@ export default function VerifiableProof() {
             loading="lazy"
             decoding="async"
             onError={() => setImagenDisponible(false)}
-            className="w-full rounded-2xl border border-border-subtle shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
+            className="w-full rounded-2xl border border-border-subtle shadow-media"
           />
         ) : (
           /* ⚠️ RENZO: sube la captura a public/dashboard-tiempos-respuesta.png

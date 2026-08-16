@@ -7,6 +7,12 @@ export interface ButtonProps {
   children: React.ReactNode;
   /** Si se pasa, se renderiza como `<a>` — todos los CTA anclan al calendario. */
   href?: string;
+  /**
+   * Solo lo usa la salida de emergencia del calendario, que abre la misma
+   * reserva en pestaña nueva cuando el iframe no carga. `rel` se pone solo
+   * para que ningún destino externo pueda tocar `window.opener`.
+   */
+  target?: '_blank';
   variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: React.ReactNode;
@@ -24,6 +30,18 @@ const VARIANTS: Record<ButtonVariant, string> = {
     'border border-accent-main/30 text-accent-main hover:bg-accent-main/10 transition-colors duration-200',
 };
 
+/**
+ * El anillo de foco es lo primero que se rompe al meter una banda clara: el
+ * lima sobre papel blanco mide 1.2:1, o sea que el botón queda sin foco
+ * visible justo en la mitad de la página. `dark` es la variante que vive en la
+ * banda clara, así que enfoca en verde institucional (10:1 sobre surface-main).
+ */
+const FOCUS_RING: Record<ButtonVariant, string> = {
+  primary: 'focus-visible:outline-accent-main',
+  dark: 'focus-visible:outline-primary-main',
+  ghost: 'focus-visible:outline-accent-main',
+};
+
 // min-h-[52px] cumple (con margen) el mínimo de 48px que exige CLAUDE.md.
 const SIZES: Record<ButtonSize, string> = {
   md: 'text-sm px-5 py-3 min-h-[48px] rounded-xl gap-2',
@@ -33,6 +51,7 @@ const SIZES: Record<ButtonSize, string> = {
 export default function Button({
   children,
   href,
+  target,
   variant = 'primary',
   size = 'lg',
   icon,
@@ -43,7 +62,8 @@ export default function Button({
 }: ButtonProps) {
   const classes = [
     'inline-flex items-center justify-center text-center font-bold cursor-pointer',
-    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-main',
+    'focus-visible:outline-2 focus-visible:outline-offset-2',
+    FOCUS_RING[variant],
     VARIANTS[variant],
     SIZES[size],
     fullWidth ? 'w-full' : '',
@@ -62,7 +82,13 @@ export default function Button({
 
   if (href) {
     return (
-      <a href={href} onClick={onClick} className={classes}>
+      <a
+        href={href}
+        target={target}
+        rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+        onClick={onClick}
+        className={classes}
+      >
         {content}
       </a>
     );

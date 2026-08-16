@@ -13,7 +13,14 @@ export type { TrackableEvent } from './lib/analytics';
 export { default as Button } from './components/ui/Button';
 export type { ButtonProps, ButtonVariant, ButtonSize } from './components/ui/Button';
 export { default as GlassCard } from './components/ui/GlassCard';
-export type { GlassCardProps } from './components/ui/GlassCard';
+export type {
+  GlassCardProps,
+  GlassCardVariant,
+  GlassCardPadding,
+  GlassCardRadius,
+} from './components/ui/GlassCard';
+export { default as IconChip } from './components/ui/IconChip';
+export type { IconChipProps, IconChipTone, IconChipSize } from './components/ui/IconChip';
 export { default as Eyebrow } from './components/ui/Eyebrow';
 export type { EyebrowProps, EyebrowVariant } from './components/ui/Eyebrow';
 export { default as FaqItem } from './components/ui/FaqItem';
