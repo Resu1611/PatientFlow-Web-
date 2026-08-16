@@ -19,7 +19,16 @@ export type TrackableEvent =
   | 'cta_hero_click'
   | 'calculadora_usada'
   | 'cta_final_click'
-  | 'calendario_embed_cargado';
+  | 'calendario_embed_cargado'
+  | 'calendario_embed_fallido'
+  /**
+   * El único evento de esta página que significa dinero: Cal confirma que la
+   * reserva quedó hecha. Los demás miden intención; este mide resultado.
+   *
+   * ⚠️ RENZO: si algún día conectas solo un evento a tu pixel, que sea este.
+   * Es el que hay que marcar como conversión en Meta / GA4.
+   */
+  | 'demo_agendada';
 
 export function trackEvent(
   name: TrackableEvent,

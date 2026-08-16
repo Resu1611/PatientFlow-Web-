@@ -42,6 +42,10 @@ export interface IconChipProps {
   tone?: IconChipTone;
   size?: IconChipSize;
   className?: string;
+  /** Lo usa el sello de la garantía para afinar su propia entrada. */
+  style?: React.CSSProperties;
+  /** React 19 pasa `ref` como prop normal. Lo necesita el revelado por scroll. */
+  ref?: React.Ref<HTMLSpanElement>;
 }
 
 export default function IconChip({
@@ -49,12 +53,16 @@ export default function IconChip({
   tone = 'accent',
   size = 'md',
   className = '',
+  style,
+  ref,
 }: IconChipProps) {
   const s = SIZES[size];
   const t = TONES[tone];
 
   return (
     <span
+      ref={ref}
+      style={style}
       className={`${s.box} ${t.box} flex items-center justify-center shrink-0 ${className}`}
     >
       <Icon className={`${s.icon} ${t.icon}`} aria-hidden="true" />

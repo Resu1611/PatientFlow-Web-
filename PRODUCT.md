@@ -22,7 +22,7 @@ Prueba verificable en lugar de promesas: el prospecto puede comprobar el tiempo 
 
 - Flujo: outreach por WhatsApp → link → landing en celular → CTA → calendario embebido → demo de 20 min por videollamada.
 - El link se comparte por WhatsApp: el preview Open Graph es parte de la primera impresión.
-- El calendario de demos es un iframe de GoHighLevel (`CALENDAR_EMBED_URL` en `src/config.ts`).
+- El calendario de demos es el embed inline de Cal.com (`CAL_LINK` en `src/config.ts`; loader propio en `src/lib/cal.ts`, sin dependencia npm). Confirmado 2026-08-16 — sustituyó al plan original de GoHighLevel.
 - El sistema del cliente se configura sobre WhatsApp Business API; los detalles se resuelven en la demo.
 
 ## Capabilities and Constraints
@@ -34,7 +34,7 @@ Prueba verificable en lugar de promesas: el prospecto puede comprobar el tiempo 
 - Rendimiento: carga <2s en 4G; CTAs con altura mínima 48px en móvil.
 - `trackEvent` (en `src/lib/analytics.ts`) es placeholder hasta que exista pixel.
 - Sin librerías pesadas: nada de UI kits completos ni frameworks de animación grandes; íconos vía lucide-react o SVG inline.
-- Pendientes explícitos (a 2026-08-15): hosting por decidir; pixel por definir; URL de calendario GHL por pegar.
+- Pendientes explícitos (a 2026-08-16): hosting por decidir; pixel por definir. El calendario ya está conectado: evento de 20 min creado en Cal.com y `CAL_LINK` apuntando a él.
 
 ## Brand Commitments
 
@@ -46,7 +46,7 @@ Prueba verificable en lugar de promesas: el prospecto puede comprobar el tiempo 
 
 - **La única prueba permitida** es una captura real del dashboard propio de Renzo. A 2026-08-15 **aún no existe**: la landing muestra un placeholder con dimensiones (`public/dashboard-tiempos-respuesta.png` vía `DASHBOARD_SCREENSHOT_URL`). No fabricar sustitutos.
 - **No hay clientes cerrados** (confirmado 2026-08-15; etapa de validación por outreach). Por lo tanto no existen testimonios, logos, reseñas ni métricas de clientes — y está prohibido inventarlos, incluso como placeholder.
-- Pendientes de Renzo: URL del calendario GHL, captura del dashboard, pixel/tracking, `og-image.jpg` (1200×630) en `public/`.
+- Pendientes de Renzo: captura del dashboard, pixel/tracking, `og-image.jpg` (1200×630) en `public/`.
 
 ## Product Principles
 

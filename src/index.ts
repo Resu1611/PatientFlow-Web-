@@ -5,9 +5,25 @@ import './index.lib.css';
 
 // Identidad visual y configuración
 export * as theme from './theme';
-export { CALENDAR_EMBED_URL, DASHBOARD_SCREENSHOT_URL, BOOKING_ANCHOR_ID } from './config';
+export {
+  CAL_LINK,
+  CAL_NAMESPACE,
+  CAL_ELEMENT_ID,
+  CAL_CSS_VARS,
+  CALENDAR_DIRECT_URL,
+  DASHBOARD_SCREENSHOT_URL,
+  BOOKING_ANCHOR_ID,
+} from './config';
+export { mountCalInline } from './lib/cal';
+export type { CalInlineConfig, CalCallbacks } from './lib/cal';
 export { trackEvent, once } from './lib/analytics';
 export type { TrackableEvent } from './lib/analytics';
+// Revelado por scroll. En esta build nunca se activa a menos que quien la
+// consuma marque `<html data-motion>` (la app lo hace en src/main.tsx): sin esa
+// marca las secciones se pintan enteras y quietas, que es el fallo correcto.
+export { useReveal, useEnVista, retardo } from './lib/reveal';
+export { useCountUp } from './lib/useCountUp';
+export type { CountUpOpciones } from './lib/useCountUp';
 
 // UI primitives
 export { default as Button } from './components/ui/Button';

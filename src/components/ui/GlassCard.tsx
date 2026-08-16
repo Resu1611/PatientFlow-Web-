@@ -43,6 +43,14 @@ export interface GlassCardProps {
   style?: React.CSSProperties;
   /** Etiqueta el elemento raíz: `li` dentro de listas, `div` por defecto. */
   as?: 'div' | 'li';
+  /**
+   * React 19 pasa `ref` como una prop normal, sin forwardRef. Lo necesita el
+   * revelado por scroll: varias tarjetas son ellas mismas el objetivo que se
+   * observa (la garantía, el marco del calendario, las filas de benchmarks) y
+   * envolverlas en un div solo para colgar un ref metería una caja extra
+   * dentro de grids y listas.
+   */
+  ref?: React.Ref<HTMLElement>;
 }
 
 export default function GlassCard({
@@ -53,6 +61,7 @@ export default function GlassCard({
   className = '',
   style,
   as: Tag = 'div',
+  ref,
 }: GlassCardProps) {
   const BASE: Record<GlassCardVariant, string> = {
     default: 'glass-card',
@@ -65,7 +74,9 @@ export default function GlassCard({
     .join(' ');
 
   return (
-    <Tag className={classes} style={style}>
+    // El cast existe porque `Tag` es una unión: TS no puede saber si el ref
+    // apunta a un div o a un li hasta el sitio de uso.
+    <Tag className={classes} style={style} ref={ref as React.Ref<never>}>
       {children}
     </Tag>
   );

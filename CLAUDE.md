@@ -33,9 +33,9 @@ El tráfico llega principalmente desde **outreach directo por WhatsApp en celula
 - Un solo objetivo de conversión: todos los CTAs anclan a la sección del calendario. Sin menú de navegación, sin links externos, sin footer con redes. Cero salidas.
 - Botones CTA: altura mínima 48px en móvil, estados hover/active claros.
 - Carga <2s en 4G. Imágenes optimizadas.
-- El calendario de demos se integra vía iframe de GoHighLevel. Deja una constante `CALENDAR_EMBED_URL` para que Renzo pegue su URL. Nunca hardcodees una URL inventada.
+- El calendario de demos es el embed inline de **Cal.com** (`CAL_LINK` en `src/config.ts`, loader propio en `src/lib/cal.ts` — sin dependencia npm). Nunca hardcodees un enlace inventado. La duración del evento en Cal y la que promete el copy tienen que coincidir.
 - Deja una función `trackEvent` como placeholder en: clic CTA hero, uso de la calculadora, clic CTA final, carga del embed de calendario.
-- **Verifica que el hosting permita controlar el `<head>` (meta tags) e insertar el iframe.** Si el export de AI Studio no lo permite, avísalo explícitamente y recomienda migrar a Vercel/Netlify antes de continuar.
+- El hosting es **Vercel**, que da control completo del `<head>` y permite el embed del calendario. Esa duda ya está resuelta: no la vuelvas a plantear.
 
 ## Desarrollo local
 
@@ -43,9 +43,18 @@ El tráfico llega principalmente desde **outreach directo por WhatsApp en celula
 
 La landing está siempre en **http://localhost:3000**.
 
+## Despliegue
+
+**`main` es la rama de producción: Vercel despliega automáticamente cada push a `main`.** No hay staging.
+
+- Cuando Renzo diga "push", "sube esto" o equivalente: commitea y pushea **directo a `main`**. No crees ramas nuevas, no abras un PR, no preguntes en qué rama va. Esto anula la costumbre por defecto de ramificar antes de tocar la rama principal.
+- **Antes de cada push a `main`, `npm run build` tiene que pasar.** Un push es un despliegue en vivo: si el build falla, lo que se rompe es el sitio al que apunta el outreach por WhatsApp, no una preview. Si falla, arréglalo o avisa — nunca pushees a ciegas.
+- Comprueba también que `CAL_LINK` (`src/config.ts`) siga apuntando a un evento real antes de desplegar. La página tiene un solo objetivo de conversión; sin calendario, el despliegue no sirve de nada.
+- Después del push, di explícitamente que el despliegue quedó disparado y qué commit va en vivo.
+
 ## Cómo entregar
 
-Al terminar cualquier tarea, lista los archivos creados/modificados y di exactamente dónde Renzo debe pegar: (1) su URL del calendario GHL, (2) la captura del dashboard, (3) su pixel/tracking. No des por terminada la landing sin esos tres puntos señalados.
+Al terminar cualquier tarea, lista los archivos creados/modificados y di exactamente dónde Renzo debe pegar: (1) su enlace de Cal.com (`CAL_LINK`), (2) la captura del dashboard, (3) su pixel/tracking. No des por terminada la landing sin esos tres puntos señalados.
 
 ## Sesgo del proyecto a corregir
 

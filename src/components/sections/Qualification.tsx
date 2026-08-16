@@ -2,6 +2,7 @@ import React from 'react';
 import { Check, X } from 'lucide-react';
 import GlassCard from '../ui/GlassCard';
 import IconChip from '../ui/IconChip';
+import { retardo, useReveal } from '../../lib/reveal';
 import { ES_PARA_TI, NO_ES_PARA_TI } from '../../data/landing';
 
 /**
@@ -13,15 +14,30 @@ import { ES_PARA_TI, NO_ES_PARA_TI } from '../../data/landing';
  * de un vistazo. Solo funciona porque .glass-card vive en `@layer components`:
  * mientras estuvo sin capa, su `border` en forma corta ganaba y este filo no
  * se pintaba nunca.
+ *
+ * Las dos columnas entran a la vez, en un solo bloque. Escalonarlas haría que
+ * "es para ti" llegara primero y "no es para ti" después, y esa regla 4 dice
+ * exactamente lo contrario: son las dos mitades de un mismo filtro, con el
+ * mismo peso. El movimiento no puede desmentir al copy.
  */
 export default function Qualification() {
+  const refTitulo = useReveal<HTMLHeadingElement>();
+  const refColumnas = useReveal<HTMLDivElement>();
+
   return (
     <section className="py-12 lg:py-20">
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-main text-center mb-12 leading-tight">
+      <h2
+        ref={refTitulo}
+        className="pf-reveal text-2xl sm:text-3xl lg:text-4xl font-bold text-text-main text-center mb-12 leading-tight"
+      >
         ¿Este sistema es para tu clínica?
       </h2>
 
-      <div className="grid gap-5 md:grid-cols-2 max-w-4xl mx-auto">
+      <div
+        ref={refColumnas}
+        style={retardo(100)}
+        className="pf-reveal grid gap-5 md:grid-cols-2 max-w-4xl mx-auto"
+      >
         <GlassCard className="border-t-2 border-t-accent-main/40">
           <h3 className="text-lg font-bold mb-6 flex items-center gap-3 text-text-main">
             <IconChip icon={Check} size="sm" />

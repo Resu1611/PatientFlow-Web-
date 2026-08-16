@@ -420,6 +420,185 @@ h1, h2 {
   animation: state-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   REVELADO POR SCROLL — los dos tempos de la página
+   ══════════════════════════════════════════════════════════════════════════
+
+   La página entera trata de una sola cosa: cuánto tarda algo en resolverse.
+   4h 12min contra 47 segundos. Ese es el argumento del hero, el de la
+   calculadora y el de la garantía, así que es también el material del
+   movimiento — no un adorno encima del argumento, el argumento otra vez.
+
+   De ahí que no haya UNA entrada repetida doce veces, sino dos tempos, y que
+   cuál le toca a cada sección sea información:
+
+     lento (560ms · 14px)  — el mundo sin el sistema. Las fugas, la cifra que
+                             pierdes, la prueba, la garantía, el cierre. Las
+                             cosas llegan cuando llegan.
+     rápido (300ms · 6px)  — la banda clara, que es donde se describe el
+                             sistema. Ahí todo se resuelve rápido, porque eso
+                             es exactamente lo que se está afirmando.
+
+   Cruzar de una banda a otra se nota en la velocidad antes que en el color.
+
+   Encima de esa base hay dos momentos coreografiados, y solo dos, porque el
+   momento autoral de la página sigue siendo la escena del mockup del hero:
+     · el riel de "Cómo funciona" se dibuja y cada nodo aterriza al pasar —
+       ahí la secuencia ES la información;
+     · en Benchmarks la celda "con sistema" empieza idéntica a la de "sin
+       sistema" y se resuelve después: el antes y el después contados en el
+       tiempo, no solo en el color.
+
+   Todo lo demás llega y ya. Un CTA, una tarjeta o un párrafo que además
+   rebota es ruido compitiendo con esos dos.
+
+   Todo el bloque vive dentro de `no-preference`: con reduced-motion activo
+   ninguna de estas reglas existe, así que no hay nada que apagar con
+   !important — el contenido simplemente está ahí. Ver el bloque de
+   accesibilidad más abajo. */
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    /* Deceleración natural, la misma curva que ya usan la entrada del hero,
+       las burbujas y la barra fija. Una sola curva en todo el sitio. */
+    --pf-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+    --pf-dur-lento: 560ms;
+    --pf-viaje-lento: 14px;
+    --pf-dur-rapido: 300ms;
+    --pf-viaje-rapido: 6px;
+  }
+
+  /* El estado oculto cuelga de `data-motion`, que pone JS antes del primer
+     render. Sin JS este selector no coincide con nada y la página se lee
+     entera. */
+  [data-motion] .pf-reveal {
+    opacity: 0;
+    transform: translateY(var(--pf-viaje, var(--pf-viaje-lento)))
+      scale(var(--pf-escala, 1));
+    transition-property: opacity, transform;
+    transition-duration: var(--pf-dur, var(--pf-dur-lento));
+    transition-timing-function: var(--pf-ease);
+    transition-delay: var(--pf-retardo, 0ms);
+  }
+
+  /* `transform: none` y no `translateY(0) scale(1)`: en reposo el elemento no
+     queda en una capa de composición propia, así que el texto se rasteriza
+     con los mismos subpíxeles que el resto de la página. */
+  [data-motion] .pf-reveal[data-revealed] {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-motion] .pf-tempo-rapido {
+    --pf-dur: var(--pf-dur-rapido);
+    --pf-viaje: var(--pf-viaje-rapido);
+  }
+
+  /* Imágenes y embeds, por el mismo motivo que existe `--shadow-media` aparte
+     de `--shadow-card`: cargan más peso visual que un párrafo y llegar a la
+     misma velocidad que el texto que las presenta los iguala. */
+  [data-motion] .pf-tempo-media {
+    --pf-dur: 640ms;
+    --pf-viaje: 18px;
+  }
+
+  /* La garantía es lo único de la página que le cuesta dinero a Renzo si
+     falla. Llega más despacio y desde más lejos que cualquier otra cosa de la
+     landing: es jerarquía dicha con el reloj, y no necesita ningún efecto
+     propio. Si algo más empieza a usar este tempo, deja de significar. */
+  [data-motion] .pf-tempo-peso {
+    --pf-dur: 720ms;
+    --pf-viaje: 20px;
+  }
+
+  /* ── Cómo funciona: el riel se dibuja ──
+     El riel ya era la información de esa sección (esto pasa, luego esto,
+     luego esto) y estaba dibujado de golpe, o sea afirmando una secuencia sin
+     mostrarla. Ahora se traza de arriba abajo y cada nodo aterriza cuando la
+     línea lo alcanza. Los retardos de los nodos van en el JSX, contra la
+     duración del trazo. */
+  [data-motion] .pf-riel .pf-riel-linea {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  [data-motion] .pf-riel[data-revealed] .pf-riel-linea {
+    transform: none;
+    /* Curva casi lineal a propósito: si el trazo desacelera al final, los
+       nodos de abajo aterrizan sobre una línea que todavía no llegó. */
+    transition: transform 760ms cubic-bezier(0.35, 0, 0.25, 1);
+  }
+
+  [data-motion] .pf-riel .pf-paso {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  [data-motion] .pf-riel[data-revealed] .pf-paso {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 340ms var(--pf-ease) var(--pf-retardo, 0ms),
+      transform 340ms var(--pf-ease) var(--pf-retardo, 0ms);
+  }
+
+  /* ── Benchmarks: la celda que se resuelve ──
+     Las dos celdas de cada fila arrancan iguales — mismo gris hundido, mismo
+     texto apagado, un empate — y la de la derecha se resuelve después. Es la
+     misma afirmación que ya hacía el color, dicha además en el tiempo: no son
+     dos estados que coexisten, es uno que sucede al otro.
+
+     El material es el color de fondo y no un desplazamiento, porque lo que
+     cambia aquí no es dónde está la celda sino qué es.
+
+     `--pf-resuelve-retardo` se calcula en el JSX contra el retardo de la fila:
+     ambas transiciones arrancan en el mismo instante (cuando la fila recibe
+     `data-revealed`), así que el retardo del hijo lleva sumado el del padre. */
+  [data-motion] .pf-reveal .pf-resuelve {
+    background-color: var(--color-surface-2);
+    border-color: rgb(26 64 41 / 0);
+    color: var(--color-text-dark-muted);
+  }
+
+  [data-motion] .pf-reveal[data-revealed] .pf-resuelve {
+    background-color: rgb(206 248 141 / 0.4);
+    border-color: rgb(26 64 41 / 0.15);
+    color: var(--color-primary-main);
+    transition:
+      background-color 480ms var(--pf-ease) var(--pf-resuelve-retardo, 300ms),
+      border-color 480ms var(--pf-ease) var(--pf-resuelve-retardo, 300ms),
+      color 480ms var(--pf-ease) var(--pf-resuelve-retardo, 300ms);
+  }
+
+  [data-motion] .pf-reveal .pf-flecha {
+    opacity: 0.3;
+    transform: translateX(-4px);
+  }
+
+  [data-motion] .pf-reveal[data-revealed] .pf-flecha {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 420ms var(--pf-ease) var(--pf-resuelve-retardo, 300ms),
+      transform 420ms var(--pf-ease) var(--pf-resuelve-retardo, 300ms);
+  }
+}
+
+/* Imprimir una página a medio revelar sale en blanco: al papel no llega
+   ningún scroll que dispare el observer. */
+@media print {
+  [data-motion] .pf-reveal,
+  [data-motion] .pf-riel .pf-paso {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-motion] .pf-riel .pf-riel-linea {
+    transform: none !important;
+  }
+}
+
 /* ── Accesibilidad: respeta la preferencia del sistema ──
    Antes esto era una regla única que ponía TODA animación y TODA transición
    en 0.01ms. Es demasiado brusco: mata también el color y la opacidad, que
@@ -428,7 +607,12 @@ h1, h2 {
    acordeón abriéndose. Reducir movimiento no es apagar el feedback.
 
    Lo que se va: los bucles de ambiente, la escena del hero y cualquier
-   desplazamiento. Lo que se queda: opacidad y color, más cortos. */
+   desplazamiento. Lo que se queda: opacidad y color, más cortos.
+
+   El revelado por scroll no aparece aquí y no es un olvido: vive entero
+   dentro de `no-preference`, así que con esta preferencia activa esas reglas
+   ni siquiera se declaran. Las secciones están puestas desde el principio,
+   que es el resultado correcto y además el que no hay que desactivar. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 

@@ -12,6 +12,7 @@ import IconChip from '../ui/IconChip';
 import Button from '../ui/Button';
 import { BOOKING_ANCHOR_ID } from '../../config';
 import { trackEvent } from '../../lib/analytics';
+import { retardo, useReveal } from '../../lib/reveal';
 import {
   PIEZAS_SISTEMA,
   SISTEMA_SECCION,
@@ -38,21 +39,37 @@ import {
  * Íconos con eco deliberado: Zap repite el paso 02 de HowItWorks (misma
  * capacidad, más detalle); PhoneIncoming y CalendarClock contrastan con
  * PhoneMissed y CalendarX2 de Leaks (el problema y su resolución).
+ *
+ * El eco llega también al movimiento: las cuatro piezas entran juntas, igual
+ * que las cuatro fugas, porque son las mismas cuatro cosas vistas desde el
+ * otro lado. Lo único que cambia entre las dos rejillas es la velocidad —
+ * lenta allá, rápida aquí — que es el corte de banda dicho con el reloj.
  */
 const ICONOS = [Zap, PhoneIncoming, Repeat, CalendarClock];
 
 export default function SystemPieces() {
+  const refTitulo = useReveal<HTMLDivElement>();
+  const refPiezas = useReveal<HTMLDivElement>();
+  const refReporte = useReveal<HTMLElement>();
+  const refCta = useReveal<HTMLDivElement>();
+
   return (
     <section className="pt-12 pb-16 lg:pt-20 lg:pb-24">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-dark text-center mb-5 leading-tight">
-          {SISTEMA_SECCION.titulo}
-        </h2>
-        <p className="text-text-dark-muted text-sm sm:text-base leading-relaxed text-center max-w-2xl mx-auto mb-12">
-          {SISTEMA_SECCION.intro}
-        </p>
+        <div ref={refTitulo} className="pf-reveal pf-tempo-rapido">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-dark text-center mb-5 leading-tight">
+            {SISTEMA_SECCION.titulo}
+          </h2>
+          <p className="text-text-dark-muted text-sm sm:text-base leading-relaxed text-center max-w-2xl mx-auto mb-12">
+            {SISTEMA_SECCION.intro}
+          </p>
+        </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div
+          ref={refPiezas}
+          style={retardo(80)}
+          className="pf-reveal pf-tempo-rapido grid gap-5 md:grid-cols-2"
+        >
           {PIEZAS_SISTEMA.map((pieza, i) => (
             <GlassCard key={pieza.numero} variant="light">
               <div className="flex items-start gap-3 mb-4">
@@ -89,7 +106,9 @@ export default function SystemPieces() {
         <GlassCard
           variant="light"
           padding="sm"
-          className="mt-8 flex items-start gap-3 max-w-xl mx-auto"
+          ref={refReporte}
+          style={retardo(140)}
+          className="pf-reveal pf-tempo-rapido mt-8 flex items-start gap-3 max-w-xl mx-auto"
         >
           <FileBarChart
             className="w-4 h-4 text-primary-main shrink-0 mt-0.5"
@@ -100,7 +119,11 @@ export default function SystemPieces() {
           </p>
         </GlassCard>
 
-        <div className="mt-12 flex justify-center">
+        <div
+          ref={refCta}
+          style={retardo(200)}
+          className="pf-reveal pf-tempo-rapido mt-12 flex justify-center"
+        >
           <Button
             href={`#${BOOKING_ANCHOR_ID}`}
             variant="dark"

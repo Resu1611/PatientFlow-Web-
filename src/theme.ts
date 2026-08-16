@@ -126,6 +126,47 @@ export const tapTarget = {
   minHeight: '52px',
 } as const;
 
+/**
+ * Movimiento. Los valores viven en `src/index.css` (bloque "REVELADO POR
+ * SCROLL"); aquí quedan documentados como decisión de sistema, igual que el
+ * ritmo vertical de arriba.
+ *
+ * La landing entera trata de cuánto tarda algo en resolverse — 4h 12min contra
+ * 47 segundos — así que la velocidad de entrada no es un ajuste de gusto, es
+ * el mismo argumento otra vez. Por eso hay dos tempos y no una entrada
+ * repetida doce veces, y por eso cuál le toca a cada sección es información:
+ *
+ *  - `slow`  — el mundo sin el sistema: fugas, la cifra que pierdes, la
+ *    prueba, la garantía, el cierre. Las cosas llegan cuando llegan.
+ *  - `fast`  — la banda clara, donde se describe el sistema. Todo se resuelve
+ *    rápido, que es literalmente lo que la banda afirma. Cruzar de una banda a
+ *    otra se nota en la velocidad antes que en el color.
+ *  - `media` — imágenes y embeds, por el mismo motivo que `shadows.card` es
+ *    distinta: cargan más peso visual que un párrafo.
+ *  - `weight` — exclusivo de la garantía. Si algo más lo usa, deja de
+ *    significar "esto pesa más que todo lo demás".
+ *
+ * Encima de esa base hay dos momentos coreografiados y solo dos, porque el
+ * momento autoral de la página sigue siendo la escena del mockup del hero: el
+ * riel de "Cómo funciona" (donde la secuencia ES la información) y la celda
+ * que se resuelve en Benchmarks (el antes y el después contados en el tiempo).
+ */
+export const motion = {
+  /** Una sola curva en todo el sitio: deceleración natural, sin rebote. */
+  ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  enter: {
+    slow: { duration: '560ms', travel: '14px' },
+    fast: { duration: '300ms', travel: '6px' },
+    media: { duration: '640ms', travel: '18px' },
+    weight: { duration: '720ms', travel: '20px' },
+  },
+  /** Cascadas dentro de una lista. Topan bajo ~300ms: nadie espera al último. */
+  stagger: {
+    benchmarks: '90ms',
+    demo: '80ms',
+  },
+} as const;
+
 export const shadows = {
   limeGlow: '0 4px 20px rgba(206,248,141,0.35)',
   limeGlowHover: '0 6px 28px rgba(206,248,141,0.50)',
