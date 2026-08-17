@@ -70,6 +70,20 @@ export const CAL_CSS_VARS = {
  */
 export const DASHBOARD_SCREENSHOT_URL = '/dashboard-tiempos-respuesta.png';
 
+/**
+ * Ruta de una captura de pantalla REAL de WhatsApp mostrando al sistema
+ * respondiendo (puede ser una prueba tuya, escribiéndole tú mismo al número
+ * del sistema). Misma categoría de evidencia que el dashboard — verificable,
+ * no fabricada — nunca una foto de "cliente feliz" (regla 1 de CLAUDE.md).
+ *
+ * ⚠️ RENZO: sube la captura a `public/` con este nombre. Recorte vertical de
+ * la app de WhatsApp con el mensaje entrante y la respuesta automática, hora
+ * visible. Recomendado ~1000×1300px.
+ *
+ * Mientras el archivo no exista, se muestra el placeholder con dimensiones.
+ */
+export const SYSTEM_PHOTO_URL = '/sistema-respondiendo.png';
+
 /** Id del ancla de la sección de agendado. Todo CTA apunta aquí. */
 export const BOOKING_ANCHOR_ID = 'agendar';
 

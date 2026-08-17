@@ -164,6 +164,8 @@ export const SISTEMA_SECCION = {
   titulo: 'Las 4 piezas que tapan las fugas',
   intro:
     'Cada pieza tapa una de las fugas que viste más arriba. Juntas cubren el recorrido completo: desde el primer mensaje hasta que el paciente llega a la cita.',
+  placeholderTitulo: 'Captura real del sistema respondiendo',
+  placeholderNota: 'Conversación de WhatsApp con el sistema · imagen real, pendiente de subir',
 } as const;
 
 export const PIEZAS_SISTEMA: PiezaSistema[] = [

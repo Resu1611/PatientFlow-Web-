@@ -10,7 +10,8 @@ import {
 import GlassCard from '../ui/GlassCard';
 import IconChip from '../ui/IconChip';
 import Button from '../ui/Button';
-import { BOOKING_ANCHOR_ID } from '../../config';
+import ImagePlaceholder from '../ui/ImagePlaceholder';
+import { BOOKING_ANCHOR_ID, SYSTEM_PHOTO_URL } from '../../config';
 import { trackEvent } from '../../lib/analytics';
 import { retardo, useReveal } from '../../lib/reveal';
 import {
@@ -55,16 +56,44 @@ export default function SystemPieces() {
 
   return (
     <section className="pt-12 pb-16 lg:pt-20 lg:pb-24">
-      <div className="max-w-4xl mx-auto">
-        <div ref={refTitulo} className="pf-reveal pf-tempo-rapido">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-dark text-center mb-5 leading-tight">
-            {SISTEMA_SECCION.titulo}
-          </h2>
-          <p className="text-text-dark-muted text-sm sm:text-base leading-relaxed text-center max-w-2xl mx-auto mb-12">
-            {SISTEMA_SECCION.intro}
-          </p>
+      {/* Partición asimétrica, mismo lenguaje que el Hero (texto + visual),
+          leída al revés: aquí la evidencia entra primero en móvil porque la
+          sección responde "¿esto es real?" antes que "¿qué hace?". El
+          placeholder usa el mismo componente y el mismo tempo `media` que la
+          captura del dashboard — es la misma clase de prueba, no una foto de
+          stock. */}
+      <div className="max-w-5xl mx-auto mb-12 lg:mb-16 grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-14 items-center">
+        <div className="order-2 lg:order-1">
+          <div
+            ref={refTitulo}
+            className="pf-reveal pf-tempo-rapido text-center lg:text-left"
+          >
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-dark mb-5 leading-tight">
+              {SISTEMA_SECCION.titulo}
+            </h2>
+            <p className="text-text-dark-muted text-sm sm:text-base leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              {SISTEMA_SECCION.intro}
+            </p>
+          </div>
         </div>
 
+        <div className="order-1 lg:order-2">
+          <ImagePlaceholder
+            src={SYSTEM_PHOTO_URL}
+            alt="Captura real de una conversación de WhatsApp con el sistema respondiendo"
+            width={1000}
+            height={1300}
+            aspectClass="aspect-[4/5]"
+            placeholderTitulo={SISTEMA_SECCION.placeholderTitulo}
+            placeholderNota={SISTEMA_SECCION.placeholderNota}
+            fileHint="1000 × 1300 px · public/sistema-respondiendo.png"
+            className="max-w-xs sm:max-w-sm mx-auto lg:max-w-none"
+            tone="light"
+          />
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto">
         <div
           ref={refPiezas}
           style={retardo(80)}

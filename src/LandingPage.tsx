@@ -67,7 +67,7 @@ export default function LandingPage() {
           <SystemPieces />
         </Band>
 
-        <Band>
+        <Band ambient>
           <VerifiableProof />
           <Qualification />
           <DemoExpectations />
